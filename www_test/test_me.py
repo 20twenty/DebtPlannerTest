@@ -42,10 +42,27 @@ def test_demo(dpp):
    assert(dpp.find_element_by_id('get_started_page').is_displayed()) 
    dpp.find_element_by_id('have_an_account').click()
    assert(dpp.find_element_by_id('login_page').is_displayed())
-
    login(dpp, "DeMo", "demo")
    main_function(dpp)
    logout(dpp)
+
+def test_create_demo_account(dpp):
+   assert(dpp.find_element_by_id('get_started_page').is_displayed()) 
+   dpp.find_element_by_id('have_an_account').click()
+   assert(dpp.find_element_by_id('login_page').is_displayed())
+   dpp.find_element_by_id('create_new_account').click()
+   assert(dpp.find_element_by_id('create_account_page').is_displayed())
+   dpp.find_element_by_id('new_username').send_keys('1@.demo')
+   dpp.find_element_by_id('new_password').send_keys('!@#$%^&*()')
+   dpp.find_element_by_id('new_confirm_password').send_keys('!@#$%^&*()')
+   dpp.find_element_by_id('new_confirm_password').submit()
+   WebDriverWait(dpp, 5).until(EC.element_to_be_clickable((By.ID,'validate_page')))
+   dpp.find_element_by_id('validate_new_email').send_keys('2@.demo')
+   dpp.find_element_by_id('validate_new_email').submit()
+   WebDriverWait(dpp, 5).until(EC.element_to_be_clickable((By.ID,'validate_page')))
+   dpp.find_element_by_id('validation_code').send_keys('demo')
+   dpp.find_element_by_id('validation_code').submit()
+   WebDriverWait(dpp, 5).until(EC.element_to_be_clickable((By.ID,'main_page')))
 
 def test_guest(dpp):
    assert(dpp.find_element_by_id('get_started_page').is_displayed()) 

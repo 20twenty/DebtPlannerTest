@@ -2,12 +2,6 @@ import urllib2
 import pytest
 from selenium import webdriver
 
-#BASE_URL = "http://www.ivist.com/DebtPlanner2_dev/"
-BASE_URL = "http://betacalc.debt-payoff-planner.com/"
-WEB_APP = BASE_URL + "planner.html"
-
-urllib2.urlopen(BASE_URL + "forTestingOnly/deletedb.php").read()
-
 browsers = {
    'firefox': webdriver.Firefox,
    'chrome': webdriver.Chrome,
@@ -17,8 +11,16 @@ browsers = {
    'firefox': webdriver.Firefox,
 }
 
+def pytest_addoption(parser):
+   parser.addoption("--url")
+
+def pytest_configure(config):
+   global WEB_APP
+   base_url = config.getoption("--url")
+   WEB_APP = base_url + "planner.html"
+   urllib2.urlopen(base_url + "forTestingOnly/deletedb.php").read()
+
 @pytest.fixture(scope='session', params=browsers.keys())
-#@pytest.fixture(params=browsers.keys())
 def browser(request):
    driver = browsers[request.param]()
    driver.get(WEB_APP)

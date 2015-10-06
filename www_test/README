@@ -9,6 +9,28 @@ sudo pip install pytest-xdist
 sudo pip install pytest-html
 
 Then run as:
-py.test -n 2 --html=report.html
+   py.test
 
-Can be run remotely or locally since it just launches firefox and controls it
+   This will test the default url location of http://betacalc.debt-payoff-planner.com/
+
+
+To test a local install of the webapp, use the --url option:
+
+   py.test --url='http://betacalc.debt-payoff-planner.com/'
+
+   where the url specified should be the url where planner.html can be found
+
+
+To run parallel tests, use the -n option
+
+   py.test -n 2 
+
+   This will run 2 threads for testing
+
+
+To specify a single test to run, use the -k option, for example:
+
+   py.test -k test_create_demo_account
+
+
+Can be run any url remotely or locally since it just launches firefox and controls it
