@@ -2,6 +2,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC 
 from selenium.webdriver.common.by import By as By
 from page import BasePage
+from page import LoginPage
 from page import MainPage
 from locators import BasePageLocators
 from locators import MainPageLocators
@@ -15,10 +16,8 @@ from locators import ForgotPasswordPageLocators
 # ---------------------------
 
 def test_demo(dpp):
-    assert(dpp.find_element(*BasePageLocators.get_started_now).is_displayed()) 
-    dpp.find_element(*BasePageLocators.have_an_account).click()
-    assert(dpp.find_element(*LoginPageLocators.login_page).is_displayed())
-    BasePage.login(dpp, "DeMo", "demo")
+    BasePage.openLoginPage(dpp)
+    LoginPage.login(dpp, "DeMo", "demo")
     MainPage.main_function(dpp)
     MainPage.logout(dpp)
 
@@ -37,9 +36,7 @@ def test_create_demo_account(dpp):
    WebDriverWait(dpp, 5).until(EC.element_to_be_clickable(MainPageLocators.main_page))
   
 def test_guest(dpp):
-   assert(dpp.find_element(*BasePageLocators.get_started_page).is_displayed())
-   dpp.find_element(*BasePageLocators.get_started_now).click()
-   assert(dpp.find_element(*MainPageLocators.main_page).is_displayed())
+   BasePage.openMainPageAsGuest(dpp)
    MainPage.main_function(dpp)
    dpp.refresh();
    assert(dpp.find_element(*MainPageLocators.main_page).is_displayed())
@@ -68,6 +65,11 @@ def test_page_nav(dpp):
    assert(dpp.find_element(*MainPageLocators.main_page).is_displayed())
    MainPage.logout_guest(dpp)
   
+def test_add_principal_payment(dpp):
+    BasePage.openMainPageAsGuest(dpp)
+    MainPage.add_debt(dpp)
+    MainPage.add_payment_ammount(dpp, 20)
+
 def test_title(dpp):
    assert 'Debt Payoff Planner' == dpp.title
 

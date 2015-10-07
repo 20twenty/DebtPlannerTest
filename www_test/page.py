@@ -9,11 +9,15 @@ from locators import CreateAccountPageLocators
 class BasePage(object):
     """Base class to initialize the base page that will be called from all pages"""
 
-    def login(dpp, username, password):
-        dpp.find_element(*LoginPageLocators.username).send_keys(username)
-        dpp.find_element(*LoginPageLocators.password).send_keys(password)
-        dpp.find_element(*LoginPageLocators.login_button).click()
-        WebDriverWait(dpp, 5).until(EC.element_to_be_clickable(MainPageLocators.main_page))
+    def openLoginPage(dpp):
+        assert(dpp.find_element(*BasePageLocators.get_started_now).is_displayed()) 
+        dpp.find_element(*BasePageLocators.have_an_account).click()
+        assert(dpp.find_element(*LoginPageLocators.login_page).is_displayed())
+    
+    def openMainPageAsGuest(dpp):
+        assert(dpp.find_element(*BasePageLocators.get_started_page).is_displayed())
+        dpp.find_element(*BasePageLocators.get_started_now).click()
+        assert(dpp.find_element(*MainPageLocators.main_page).is_displayed())    
 
     def openCreateAccountPage(dpp):
         assert(dpp.find_element(*BasePageLocators.get_started_page).is_displayed())
@@ -21,6 +25,15 @@ class BasePage(object):
         assert(dpp.find_element(*LoginPageLocators.login_page).is_displayed())
         dpp.find_element(*LoginPageLocators.create_new_account).click()
         assert(dpp.find_element(*CreateAccountPageLocators.create_account_page).is_displayed())
+
+class LoginPage(BasePage):
+    """Login page action methods come here."""
+    
+    def login(dpp, username, password):
+        dpp.find_element(*LoginPageLocators.username).send_keys(username)
+        dpp.find_element(*LoginPageLocators.password).send_keys(password)
+        dpp.find_element(*LoginPageLocators.login_button).click()
+        WebDriverWait(dpp, 5).until(EC.element_to_be_clickable(MainPageLocators.main_page))
 
 class MainPage(BasePage):
     """Home page action methods come here."""
@@ -37,6 +50,23 @@ class MainPage(BasePage):
         dpp.find_element(*MainPageLocators.use_example).click()
         dpp.find_element(*MainPageLocators.save_button).click()
         WebDriverWait(dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page))
+        
+    def get_depts(dpp):
+        debt_display = dpp.find_elements(*MainPageLocators.debt_display)
+        
+    def del_dept(dpp, name):
+        debt_display = MainPage.get_depts(dpp)
+        for dept in debt_display:
+            if dept.find_element(*MainPageLocators.debt_name).contains("name"):
+                dept.find_element(*MainPageLocators.debt_name).click()
+                dept.find_element(*MainPageLocators.other_options).click()
+                dept.find_element(*MainPageLocators.delete).click()
+        
+    def add_payment_ammount(dpp, amount):
+        dpp.find_element(*MainPageLocators.debt_name).click()
+        dpp.find_element(*MainPageLocators.debt_payment_amount).send_keys(amount)
+        dpp.find_element(*MainPageLocators.save_button).click()
+        WebDriverWait(dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page)) 
         
     def logout(dpp):
         dpp.find_element(*MainPageLocators.menu_active_account).click()

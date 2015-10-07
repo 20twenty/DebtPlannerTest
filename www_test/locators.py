@@ -20,6 +20,11 @@ class MainPageLocators(object):
     save_button = (By.CSS_SELECTOR, '#save_button')
     guest_logout_divider = (By.CSS_SELECTOR, '#guest_logout_divider')
     guest_logout = (By.CSS_SELECTOR, '#guest_logout')
+    debt_display = (By.CSS_SELECTOR, "[id*='debt_display']")
+    debt_name = (By.CSS_SELECTOR, '.debt_name')
+    debt_payment_amount = (By.CSS_SELECTOR, '.add_debt_payment_amount')
+    other_options = (By.CSS_SELECTOR, '#other_options')
+    delete = (By.CSS_SELECTOR, '#delete')
     
 class LoginPageLocators(object):
     """A class for login page locators. All main page locators should come here"""
