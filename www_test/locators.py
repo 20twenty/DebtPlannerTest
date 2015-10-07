@@ -4,8 +4,8 @@ class BasePageLocators(object):
     """A class for home page locators. All main page locators should come here"""
     
     get_started_page = (By.CSS_SELECTOR, '#get_started_page')
-    get_started = (By.CSS_SELECTOR, '#get_started_now')
-    login = (By.CSS_SELECTOR, '#have_an_account')
+    get_started_now = (By.CSS_SELECTOR, '#get_started_now')
+    have_an_account = (By.CSS_SELECTOR, '#have_an_account')
 
 class MainPageLocators(object):
     """A class for main page locators. All main page locators should come here"""
@@ -22,9 +22,36 @@ class MainPageLocators(object):
     guest_logout = (By.CSS_SELECTOR, '#guest_logout')
     
 class LoginPageLocators(object):
-    """A class for home page locators. All main page locators should come here"""
+    """A class for login page locators. All main page locators should come here"""
     
     login_page = (By.CSS_SELECTOR, '#login_page')    
     username = (By.CSS_SELECTOR, '#username')
     password = (By.CSS_SELECTOR, '#password')
     login_button = (By.CSS_SELECTOR, "[value='Login']")
+    create_new_account = (By.CSS_SELECTOR, '#create_new_account')
+    forgot_password_link = (By.CSS_SELECTOR, '#forgot_password_link')
+    use_as_guest = (By.CSS_SELECTOR, '#use_as_guest')
+    
+class CreateAccountPageLocators(object):
+    """A class for create account page locators. All main page locators should come here"""
+    
+    create_account_page = (By.CSS_SELECTOR, '#create_account_page')  
+    new_username = (By.CSS_SELECTOR, '#new_username')
+    new_password = (By.CSS_SELECTOR, '#new_password')
+    new_confirm_password = (By.CSS_SELECTOR, '#new_confirm_password')
+    use_as_guest2 = (By.CSS_SELECTOR, '#use_as_guest2')
+    already_a_member = (By.CSS_SELECTOR, '#already_a_member')
+
+class ValidatePageLocators(object):
+    """A class for validate page locators. All main page locators should come here"""
+    
+    validate_page = (By.CSS_SELECTOR, '#validate_page')
+    validate_new_email = (By.CSS_SELECTOR, '#validate_new_email')
+    validation_code = (By.CSS_SELECTOR, '#validation_code')
+    
+class ForgotPasswordPageLocators(object):
+    """A class for forgot password page locators. All main page locators should come here"""
+    
+    forgot_password_page = (By.CSS_SELECTOR, '#forgot_password_page')
+    forgot_password_cancel = (By.CSS_SELECTOR, '#forgot_password_cancel')
+    

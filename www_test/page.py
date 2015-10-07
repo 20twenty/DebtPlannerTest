@@ -4,6 +4,7 @@ from element import BasePageElement
 from locators import BasePageLocators
 from locators import LoginPageLocators
 from locators import MainPageLocators
+from locators import CreateAccountPageLocators
 
 class BasePage(object):
     """Base class to initialize the base page that will be called from all pages"""
@@ -13,6 +14,13 @@ class BasePage(object):
         dpp.find_element(*LoginPageLocators.password).send_keys(password)
         dpp.find_element(*LoginPageLocators.login_button).click()
         WebDriverWait(dpp, 5).until(EC.element_to_be_clickable(MainPageLocators.main_page))
+
+    def openCreateAccountPage(dpp):
+        assert(dpp.find_element(*BasePageLocators.get_started_page).is_displayed())
+        dpp.find_element(*BasePageLocators.have_an_account).click()
+        assert(dpp.find_element(*LoginPageLocators.login_page).is_displayed())
+        dpp.find_element(*LoginPageLocators.create_new_account).click()
+        assert(dpp.find_element(*CreateAccountPageLocators.create_account_page).is_displayed())
 
 class MainPage(BasePage):
     """Home page action methods come here."""
