@@ -1,4 +1,7 @@
-import urllib2
+try:
+    import urllib.request as urllib2
+except ImportError:
+    import urllib2
 import pytest
 from selenium import webdriver
 
@@ -24,6 +27,7 @@ def pytest_configure(config):
 def browser(request):
    driver = browsers[request.param]()
    driver.get(WEB_APP)
+   driver.maximize_window()
    driver.delete_all_cookies()
    request.addfinalizer(lambda *args: driver.quit())
    return driver
