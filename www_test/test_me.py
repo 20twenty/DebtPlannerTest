@@ -10,65 +10,76 @@ from locators import LoginPageLocators
 from locators import CreateAccountPageLocators
 from locators import ValidatePageLocators
 from locators import ForgotPasswordPageLocators
+import page
 
 # ---------------------------
 # ---- Tests start here -----
 # ---------------------------
 
 def test_demo(dpp):
-    BasePage.openLoginPage(dpp)
-    LoginPage.login(dpp, "DeMo", "demo")
-    MainPage.main_function(dpp)
-    MainPage.logout(dpp)
+    base_page = page.BasePage(dpp)
+    base_page.open_login_page()
+    login_page = page.LoginPage(dpp)
+    login_page.login("DeMo", "demo")
+    main_page = page.MainPage(dpp)
+    main_page.main_function()
+    main_page.logout()
 
 def test_create_demo_account(dpp):
-   BasePage.openCreateAccountPage(dpp)
-   dpp.find_element(*CreateAccountPageLocators.new_username).send_keys('1@.demo')
-   dpp.find_element(*CreateAccountPageLocators.new_password).send_keys('!@#$%^&*()')
-   dpp.find_element(*CreateAccountPageLocators.new_confirm_password).send_keys('!@#$%^&*()')
-   dpp.find_element(*CreateAccountPageLocators.new_confirm_password).submit()
-   WebDriverWait(dpp, 5).until(EC.element_to_be_clickable(ValidatePageLocators.validate_page))
-   dpp.find_element(*ValidatePageLocators.validate_new_email).send_keys('2@.demo')
-   dpp.find_element(*ValidatePageLocators.validate_new_email).submit()
-   WebDriverWait(dpp, 5).until(EC.element_to_be_clickable(ValidatePageLocators.validate_page))
-   dpp.find_element(*ValidatePageLocators.validation_code).send_keys('demo')
-   dpp.find_element(*ValidatePageLocators.validation_code).submit()
-   WebDriverWait(dpp, 5).until(EC.element_to_be_clickable(MainPageLocators.main_page))
+    base_page = page.BasePage(dpp)
+    base_page.open_create_account_page()
+    base_page.send_keys(CreateAccountPageLocators.new_username, '1@.demo')
+    base_page.send_keys(CreateAccountPageLocators.new_password, '!@#$%^&*()')
+    base_page.send_keys(CreateAccountPageLocators.new_confirm_password, '!@#$%^&*()')
+    base_page.click(CreateAccountPageLocators.create_account_button)
+    WebDriverWait(dpp, 5).until(EC.element_to_be_clickable(ValidatePageLocators.validate_page))
+    base_page.send_keys(ValidatePageLocators.validate_new_email, '2@.demo')
+    base_page.click(ValidatePageLocators.change_email_button)
+    WebDriverWait(dpp, 5).until(EC.element_to_be_clickable(ValidatePageLocators.validate_page))
+    base_page.send_keys(ValidatePageLocators.validation_code, 'demo')
+    base_page.click(ValidatePageLocators.validate_button)
+    WebDriverWait(dpp, 5).until(EC.element_to_be_clickable(MainPageLocators.main_page))
   
 def test_guest(dpp):
-   BasePage.openMainPageAsGuest(dpp)
-   MainPage.main_function(dpp)
-   dpp.refresh();
-   assert(dpp.find_element(*MainPageLocators.main_page).is_displayed())
-   MainPage.logout_guest(dpp)
+    base_page = page.BasePage(dpp)
+    base_page.open_main_page_as_guest()
+    main_page = page.MainPage(dpp)
+    main_page.main_function()
+    dpp.refresh();
+    assert(dpp.find_element(*MainPageLocators.main_page).is_displayed())
+    main_page.logout_guest()
   
 def test_page_nav(dpp):
-   BasePage.openCreateAccountPage(dpp)
-   dpp.find_element(*CreateAccountPageLocators.already_a_member).click()
-   assert(dpp.find_element(*LoginPageLocators.login_page).is_displayed())
-   dpp.find_element(*LoginPageLocators.forgot_password_link).click()
-   assert(dpp.find_element(*ForgotPasswordPageLocators.forgot_password_page).is_displayed())
-   dpp.find_element(*ForgotPasswordPageLocators.forgot_password_cancel).click()
-   assert(dpp.find_element(*LoginPageLocators.login_page).is_displayed())
-  
-   dpp.find_element(*LoginPageLocators.use_as_guest).click()
-   assert(dpp.find_element(*MainPageLocators.main_page).is_displayed())
-   MainPage.logout_guest(dpp)
-  
-   dpp.find_element(*BasePageLocators.get_started_now).click()
-   assert(dpp.find_element(*MainPageLocators.main_page).is_displayed())
-   MainPage.logout_guest(dpp)
-     
-   BasePage.openCreateAccountPage(dpp)
-  
-   dpp.find_element(*CreateAccountPageLocators.use_as_guest2).click()
-   assert(dpp.find_element(*MainPageLocators.main_page).is_displayed())
-   MainPage.logout_guest(dpp)
+    base_page = page.BasePage(dpp)
+    base_page.open_create_account_page()
+    base_page.click(CreateAccountPageLocators.already_a_member)
+    assert(base_page.is_displayed(LoginPageLocators.login_page))
+    base_page.click(LoginPageLocators.forgot_password_link)
+    assert(base_page.is_displayed(ForgotPasswordPageLocators.forgot_password_page))
+    base_page.click(ForgotPasswordPageLocators.forgot_password_cancel)
+    assert(base_page.is_displayed(LoginPageLocators.login_page))
+    
+    base_page.click(LoginPageLocators.use_as_guest)
+    assert(base_page.is_displayed(MainPageLocators.main_page))
+    main_page = page.MainPage(dpp)
+    main_page.logout_guest()
+    
+    base_page.click(BasePageLocators.get_started_now)
+    assert(main_page.is_displayed(MainPageLocators.main_page))
+    main_page.logout_guest()
+      
+    base_page.open_create_account_page()
+    
+    base_page.click(CreateAccountPageLocators.use_as_guest2)
+    assert(dpp.find_element(*MainPageLocators.main_page).is_displayed())
+    main_page.logout_guest()
   
 def test_add_principal_payment(dpp):
-    BasePage.openMainPageAsGuest(dpp)
-    MainPage.add_debt(dpp)
-    MainPage.add_payment_ammount(dpp, 20)
+    base_page = page.BasePage(dpp)
+    base_page.open_main_page_as_guest()
+    main_page = page.MainPage(dpp)
+    main_page.add_debt()
+    main_page.add_payment_ammount(20)
 
 def test_title(dpp):
    assert 'Debt Payoff Planner' == dpp.title

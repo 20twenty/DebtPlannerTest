@@ -13,13 +13,14 @@ class MainPageLocators(object):
     main_page = (By.CSS_SELECTOR, '#main_page')
     onboarding_div = (By.CSS_SELECTOR, '#onboarding_div')
     menu_active_account = (By.CSS_SELECTOR, '#menu_active_account')
-    account_logout = (By.CSS_SELECTOR, '#account_logout')
-    account_logout_button = (By.CSS_SELECTOR, '#account_logout_button')
+    account_preferences = (By.CSS_SELECTOR, '#account_dialog #account_preferences')
+    account_logout = (By.CSS_SELECTOR, '#account_dialog #account_logout')
+    account_logout_button = (By.CSS_SELECTOR, '#account_dialog #account_logout_button')
     add_button = (By.CSS_SELECTOR, '#add_button')
-    use_example = (By.CSS_SELECTOR, '#use_example')
-    save_button = (By.CSS_SELECTOR, '#save_button')
-    guest_logout_divider = (By.CSS_SELECTOR, '#guest_logout_divider')
-    guest_logout = (By.CSS_SELECTOR, '#guest_logout')
+    use_example = (By.CSS_SELECTOR, '#debt_dialog #use_example')
+    save_button = (By.CSS_SELECTOR, '#debt_dialog #save_button')
+    guest_logout_divider = (By.CSS_SELECTOR, '#guest_dialog #guest_logout_divider')
+    guest_logout = (By.CSS_SELECTOR, '#guest_dialog #guest_logout')
     debt_display = (By.CSS_SELECTOR, "[id*='debt_display']")
     debt_name = (By.CSS_SELECTOR, '.debt_name')
     debt_payment_amount = (By.CSS_SELECTOR, '.add_debt_payment_amount')
@@ -44,6 +45,7 @@ class CreateAccountPageLocators(object):
     new_username = (By.CSS_SELECTOR, '#new_username')
     new_password = (By.CSS_SELECTOR, '#new_password')
     new_confirm_password = (By.CSS_SELECTOR, '#new_confirm_password')
+    create_account_button = (By.CSS_SELECTOR, "[value='Create Account']")
     use_as_guest2 = (By.CSS_SELECTOR, '#use_as_guest2')
     already_a_member = (By.CSS_SELECTOR, '#already_a_member')
 
@@ -53,6 +55,8 @@ class ValidatePageLocators(object):
     validate_page = (By.CSS_SELECTOR, '#validate_page')
     validate_new_email = (By.CSS_SELECTOR, '#validate_new_email')
     validation_code = (By.CSS_SELECTOR, '#validation_code')
+    validate_button = (By.CSS_SELECTOR, "[value='Validate']")
+    change_email_button = (By.CSS_SELECTOR, "[value='Change Email']")
     
 class ForgotPasswordPageLocators(object):
     """A class for forgot password page locators. All main page locators should come here"""
