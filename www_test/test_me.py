@@ -46,7 +46,7 @@ def test_guest(dpp):
     main_page = page.MainPage(dpp)
     main_page.main_function()
     dpp.refresh();
-    assert(dpp.find_element(*MainPageLocators.main_page).is_displayed())
+    assert(main_page.is_displayed(MainPageLocators.main_page))
     main_page.logout_guest()
   
 def test_page_nav(dpp):
@@ -71,7 +71,7 @@ def test_page_nav(dpp):
     base_page.open_create_account_page()
     
     base_page.click(CreateAccountPageLocators.use_as_guest2)
-    assert(dpp.find_element(*MainPageLocators.main_page).is_displayed())
+    assert(base_page.is_displayed(MainPageLocators.main_page))
     main_page.logout_guest()
   
 def test_add_principal_payment(dpp):
@@ -80,6 +80,16 @@ def test_add_principal_payment(dpp):
     main_page = page.MainPage(dpp)
     main_page.add_debt()
     main_page.add_payment_ammount(20)
+    main_page.check_payment_ammount(20)
+    
+def test_delete_debt(dpp):
+    base_page = page.BasePage(dpp)
+    base_page.open_main_page_as_guest()
+    main_page = page.MainPage(dpp)
+    main_page.add_debt()
+    assert(base_page.is_displayed(MainPageLocators.debt_name))
+    main_page.delete_debt()
+    assert(base_page.is_displayed(MainPageLocators.debt_name, False) != True)
 
 def test_title(dpp):
    assert 'Debt Payoff Planner' == dpp.title

@@ -49,22 +49,26 @@ class MainPage(BasePage):
         self.click(MainPageLocators.save_button)
         WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page))
         
-    def get_depts(self):
+    def get_debts(self):
         debt_display = self.dpp.find_elements(*MainPageLocators.debt_display)
         
-    def del_dept(self, name):
-        debt_display = self.get_depts()
-        for dept in debt_display:
-            if dept.find_element(*MainPageLocators.debt_name).contains("name"):
-                dept.find_element(*MainPageLocators.debt_name).click()
-                dept.find_element(*MainPageLocators.other_options).click()
-                dept.find_element(*MainPageLocators.delete).click()
+    def delete_debt(self):
+        self.click(MainPageLocators.debt_name)
+        self.click(MainPageLocators.other_options)
+        self.click(MainPageLocators.delete)
+        self.click(MainPageLocators.delete_confirm)
         
     def add_payment_ammount(self, amount):
         self.click(MainPageLocators.debt_name)
         self.send_keys(MainPageLocators.debt_payment_amount, amount)
         self.click(MainPageLocators.save_button)
         WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page)) 
+    
+    def check_payment_ammount(self, amount):
+        self.click(MainPageLocators.debt_name)
+        actual = self.get_text(MainPageLocators.debt_payment_made) 
+        print "Compare amount expected %s and actual %s." % (amount, actual) 
+        assert(float(amount) == float(actual))
         
     def logout(self):
         self.click(MainPageLocators.menu_active_account)

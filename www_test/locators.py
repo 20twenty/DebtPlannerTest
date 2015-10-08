@@ -24,8 +24,10 @@ class MainPageLocators(object):
     debt_display = (By.CSS_SELECTOR, "[id*='debt_display']")
     debt_name = (By.CSS_SELECTOR, '.debt_name')
     debt_payment_amount = (By.CSS_SELECTOR, '.add_debt_payment_amount')
+    debt_payment_made = (By.CSS_SELECTOR, '#individual_made_payment_display .made_debt_payment_amount')
     other_options = (By.CSS_SELECTOR, '#other_options')
     delete = (By.CSS_SELECTOR, '#delete')
+    delete_confirm = (By.CSS_SELECTOR, "[aria-describedby='remove_debt_dialog']:not([style*=none]) button:nth-child(1)")
     
 class LoginPageLocators(object):
     """A class for login page locators. All main page locators should come here"""

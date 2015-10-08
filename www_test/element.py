@@ -8,15 +8,13 @@ class BasePageElement(object):
     def __init__(self, dpp):
         self.dpp = dpp
 
-    def __get__(self, obj, owner):
+    def get_text(self, obj):
         """Gets the text of the specified object"""
-        driver = obj.driver
-        WebDriverWait(driver, 100).until(
-            lambda driver: driver.find_element_by_name(self.locator))
-        element = driver.find_element_by_name(self.locator)
+        element = self.get_element(obj)
         return element.get_attribute("value")
 
     def get_element(self, obj):
+        """Returns an element of specified object"""
         try:
             WebDriverWait(self.dpp, 25).until(
                 lambda driver: self.dpp.find_element(*obj))
@@ -27,14 +25,17 @@ class BasePageElement(object):
         return self.dpp.find_element(*obj)
     
     def click(self, obj):
+        """Clicks on the specified object"""
         element = self.get_element(obj)
         webdriver.ActionChains(self.dpp).move_to_element(element).click(element).perform()
         
     def send_keys(self, obj, text):
+        """Types text to the specified object"""
         element = self.get_element(obj)
         webdriver.ActionChains(self.dpp).move_to_element(element).send_keys_to_element(element, text).perform()
         
-    def is_displayed(self, obj):
-        element = self.get_element(obj)
-        return self.get_element(obj).is_displayed()
-        
+    def is_displayed(self, obj, throw_error = True):
+        """Checks if the specified object is displayed"""
+        if throw_error:
+            self.get_element(obj)
+        return self.dpp.find_element(*obj).is_displayed()
