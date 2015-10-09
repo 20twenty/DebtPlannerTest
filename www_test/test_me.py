@@ -35,6 +35,7 @@ def test_create_demo_account(dpp):
     WebDriverWait(dpp, 5).until(EC.element_to_be_clickable(ValidatePageLocators.validate_page))
     base_page.send_keys(ValidatePageLocators.validate_new_email, '2@.demo')
     base_page.click(ValidatePageLocators.change_email_button)
+    WebDriverWait(dpp, 5).until(EC.text_to_be_present_in_element(ValidatePageLocators.validation_code_email, '2@.demo'))
     WebDriverWait(dpp, 5).until(EC.element_to_be_clickable(ValidatePageLocators.validate_page))
     base_page.send_keys(ValidatePageLocators.validation_code, 'demo')
     base_page.click(ValidatePageLocators.validate_button)

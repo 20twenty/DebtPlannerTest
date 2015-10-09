@@ -57,6 +57,7 @@ class ValidatePageLocators(object):
     validate_page = (By.CSS_SELECTOR, '#validate_page')
     validate_new_email = (By.CSS_SELECTOR, '#validate_new_email')
     validation_code = (By.CSS_SELECTOR, '#validation_code')
+    validation_code_email = (By.CSS_SELECTOR, '#validation_code_email')
     validate_button = (By.CSS_SELECTOR, "[value='Validate']")
     change_email_button = (By.CSS_SELECTOR, "[value='Change Email']")
     
