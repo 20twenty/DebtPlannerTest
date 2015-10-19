@@ -11,6 +11,7 @@ from locators import CreateAccountPageLocators
 from locators import ValidatePageLocators
 from locators import ForgotPasswordPageLocators
 import page
+import mail
 
 # ---------------------------
 # ---- Tests start here -----
@@ -65,6 +66,7 @@ def test_page_nav(dpp):
     main_page = page.MainPage(dpp)
     main_page.logout_guest()
     
+    base_page.is_displayed(BasePageLocators.get_started_now)
     base_page.click(BasePageLocators.get_started_now)
     assert(main_page.is_displayed(MainPageLocators.main_page))
     main_page.logout_guest()
@@ -82,6 +84,31 @@ def test_add_principal_payment(dpp):
     main_page.add_debt()
     main_page.add_payment_ammount(20)
     main_page.check_payment_ammount(20)
+
+def test_account_create(dpp):
+    user = 'stiply.tone@gmail.com'
+    password = 'debtPayoff!'
+    
+#    Mark all emails as sent
+    mail.mark_seen()
+    base_page = page.BasePage(dpp)
+    base_page.open_create_account_page()
+    base_page.send_keys(CreateAccountPageLocators.new_username, user)
+    base_page.send_keys(CreateAccountPageLocators.new_password, password)
+    base_page.send_keys(CreateAccountPageLocators.new_confirm_password, password)
+    base_page.click(CreateAccountPageLocators.create_account_button)
+    WebDriverWait(dpp, 5).until(EC.element_to_be_clickable(ValidatePageLocators.validate_page))
+    
+#    Get validation code
+    mail.wait_email(60)
+    code = mail.get_code()
+    base_page.send_keys(ValidatePageLocators.validation_code, code)
+    base_page.click(ValidatePageLocators.validate_button)
+    main_page = page.MainPage(dpp)
+    base_page.click(MainPageLocators.confirm_button)    
+    WebDriverWait(dpp, 5).until(EC.element_to_be_clickable(MainPageLocators.main_page))
+    main_page.delete_account(password)
+    base_page.click(BasePageLocators.confirm_button)    
     
 def test_delete_debt(dpp):
     base_page = page.BasePage(dpp)

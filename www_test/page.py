@@ -82,3 +82,9 @@ class MainPage(BasePage):
         self.click(MainPageLocators.guest_logout)
         assert(self.is_displayed(BasePageLocators.get_started_page))
 
+    def delete_account(self, password):
+        self.click(MainPageLocators.menu_active_account)
+        self.click(MainPageLocators.delete_account_divider)
+        self.click(MainPageLocators.delete_account)
+        self.send_keys(MainPageLocators.delete_account_password, password)
+        self.click(MainPageLocators.delete_account)
