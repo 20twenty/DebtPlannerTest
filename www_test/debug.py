@@ -1,3 +1,3 @@
 import py
-args_str = "-k test_demo"
+args_str = "-n 2"
 py.test.cmdline.main(args_str.split(" "))

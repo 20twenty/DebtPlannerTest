@@ -173,10 +173,10 @@ def test_debt_dialog_validation_apr(dpp):
     main_page.validation_check(MainPageLocators.debt_apr, "0.99", "Invalid Date:")
     main_page.validation_check(MainPageLocators.debt_apr, "1.01", "Invalid Date:")
     main_page.validation_check(MainPageLocators.debt_apr, "99", "Invalid Date:")
-    main_page.validation_check(MainPageLocators.debt_apr, "99,1", "\"APR\" is out of range: 0<=APR<=99")
+    main_page.validation_check(MainPageLocators.debt_apr, "99.1", "\"APR\" is out of range: 0<=APR<=99")
     main_page.validation_check(MainPageLocators.debt_apr, "100", "\"APR\" is out of range: 0<=APR<=99")
     
-def test_debt_dialog_validation_apr(dpp):
+def test_debt_dialog_validation_promo_apr(dpp):
     base_page = page.BasePage(dpp)
     base_page.open_main_page_as_guest()
     main_page = page.MainPage(dpp)
@@ -196,4 +196,11 @@ def test_debt_dialog_validation_apr(dpp):
     main_page.validate_promo_apr(0.01)
     main_page.validate_promo_apr(0.99)
     main_page.validate_promo_apr(99)
+    
+def test_validation_principal_payment(dpp):
+    base_page = page.BasePage(dpp)
+    base_page.open_main_page_as_guest()
+    main_page = page.MainPage(dpp)
+    main_page.add_debt()
+    main_page.add_payment_ammount(20)
     

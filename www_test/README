@@ -33,4 +33,8 @@ To specify a single test to run, use the -k option, for example:
    py.test -k test_create_demo_account
 
 
+To run only tests failed from previous run
+	
+   py.test --lf
+	  
 Can be run any url remotely or locally since it just launches firefox and controls it
