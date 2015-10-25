@@ -13,6 +13,8 @@ class MainPageLocators(object):
     
     main_page = (By.CSS_SELECTOR, '#main_page')
     onboarding_div = (By.CSS_SELECTOR, '#onboarding_div')
+    confirm_button = (By.CSS_SELECTOR, "[style*='display: block'] button.ui-button-text-only")
+    popup_text = (By.CSS_SELECTOR, "[style*='display: block'] .ui-dialog-content")
     
 #    Debt details
     debt_display = (By.CSS_SELECTOR, "#account_dialog #delete_account_button")
@@ -26,9 +28,21 @@ class MainPageLocators(object):
     delete = (By.CSS_SELECTOR, '#delete')
     delete_confirm = (By.CSS_SELECTOR, "[aria-describedby='remove_debt_dialog']:not([style*=none]) button:nth-child(1)")
 
+#    Edit Debt dialog
+    debt_details = (By.CSS_SELECTOR, "#debt_dialog #debt_details")
+    debt_name_edit = (By.CSS_SELECTOR, '#debt_name[placeholder]')
+    debt_balance = (By.CSS_SELECTOR, '#debt_balance[placeholder]')
+    debt_minimum = (By.CSS_SELECTOR, '#debt_minimum[placeholder]')
+    debt_apr = (By.CSS_SELECTOR, '#debt_apr[placeholder]')
+    has_promo = (By.CSS_SELECTOR, '#has_promo')
+    promo_expires_date = (By.CSS_SELECTOR, '.promo_expires_date[placeholder]')
+    date = (By.CSS_SELECTOR, "[data-handler='selectDay']")
+    promo_apr = (By.CSS_SELECTOR, '#promo_apr[placeholder]')
+    month_prev = (By.CSS_SELECTOR, "[title='Prev']")
+    month_next = (By.CSS_SELECTOR, "[title='Next']")
+    
 #    Account manage
     menu_active_account = (By.CSS_SELECTOR, '#menu_active_account')
-    confirm_button = (By.CSS_SELECTOR, "[style*='display: block'] button.ui-button-text-only")
     account_preferences = (By.CSS_SELECTOR, '#account_dialog #account_preferences')
     account_logout = (By.CSS_SELECTOR, '#account_dialog #account_logout')
     account_logout_button = (By.CSS_SELECTOR, '#account_dialog #account_logout_button')

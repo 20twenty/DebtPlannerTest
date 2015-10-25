@@ -1,6 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC 
 from selenium.webdriver.common.by import By as By
+from random import randint
 from page import BasePage
 from page import LoginPage
 from page import MainPage
@@ -122,4 +123,77 @@ def test_delete_debt(dpp):
 def test_title(dpp):
    assert 'Debt Payoff Planner' == dpp.title
 
+def test_debt_dialog_validation_debt_name(dpp):
+    base_page = page.BasePage(dpp)
+    base_page.open_main_page_as_guest()
+    main_page = page.MainPage(dpp)
+    main_page.click(MainPageLocators.add_button)
+    main_page.validation_check(MainPageLocators.debt_name_edit, "", "\"Name\" cannot be blank. Please fill in this field before continuing")
 
+def test_debt_dialog_validation_debt_balance(dpp):
+    base_page = page.BasePage(dpp)
+    base_page.open_main_page_as_guest()
+    main_page = page.MainPage(dpp)
+    main_page.click(MainPageLocators.add_button)
+    main_page.send_keys(MainPageLocators.debt_name_edit, "Name")
+    main_page.validation_check(MainPageLocators.debt_balance, "-1", "\"Balance\" is out of range: 0<=Balance<=10000000")
+    main_page.validation_check(MainPageLocators.debt_balance, "-0.01", "\"Balance\" is out of range: 0<=Balance<=10000000")
+    main_page.validation_check(MainPageLocators.debt_balance, "0", "\"Minimum payment\" is not a valid number.")
+    main_page.validation_check(MainPageLocators.debt_balance, "0.01", "\"Minimum payment\" is not a valid number.")
+    main_page.validation_check(MainPageLocators.debt_balance, "10000000", "\"Minimum payment\" is not a valid number.")
+    main_page.validation_check(MainPageLocators.debt_balance, "10000001", "\"Balance\" is out of range: 0<=Balance<=10000000")
+    
+def test_debt_dialog_validation_minimum_payment(dpp):
+    base_page = page.BasePage(dpp)
+    base_page.open_main_page_as_guest()
+    main_page = page.MainPage(dpp)
+    main_page.click(MainPageLocators.add_button)
+    main_page.send_keys(MainPageLocators.debt_name_edit, "Name")
+    main_page.send_keys(MainPageLocators.debt_balance, randint(1, 10000000))
+    main_page.validation_check(MainPageLocators.debt_minimum, "-1", "\"Minimum payment\" is out of range: 0<=Minimum payment<=10000000")
+    main_page.validation_check(MainPageLocators.debt_minimum, "-0.01", "\"Minimum payment\" is out of range: 0<=Minimum payment<=10000000")
+    main_page.validation_check(MainPageLocators.debt_minimum, "0", "\"APR\" is not a valid number.")
+    main_page.validation_check(MainPageLocators.debt_minimum, "0.01", "\"APR\" is not a valid number.")
+    main_page.validation_check(MainPageLocators.debt_minimum, "10000000", "\"APR\" is not a valid number.")
+    main_page.validation_check(MainPageLocators.debt_minimum, "10000001", "\"Minimum payment\" is out of range: 0<=Minimum payment<=10000000")
+    
+def test_debt_dialog_validation_apr(dpp):
+    base_page = page.BasePage(dpp)
+    base_page.open_main_page_as_guest()
+    main_page = page.MainPage(dpp)
+    main_page.click(MainPageLocators.add_button)
+    main_page.send_keys(MainPageLocators.debt_name_edit, "Name")
+    main_page.send_keys(MainPageLocators.debt_balance, randint(1, 10000000))
+    main_page.send_keys(MainPageLocators.debt_minimum, randint(1, 10000000))
+    main_page.click(MainPageLocators.has_promo)
+    main_page.validation_check(MainPageLocators.debt_apr, "-1", "\"APR\" is out of range: 0<=APR<=99")
+    main_page.validation_check(MainPageLocators.debt_apr, "-0.01", "\"APR\" is out of range: 0<=APR<=99")
+    main_page.validation_check(MainPageLocators.debt_apr, "0", "Invalid Date:")
+    main_page.validation_check(MainPageLocators.debt_apr, "0.01", "Invalid Date:")
+    main_page.validation_check(MainPageLocators.debt_apr, "0.99", "Invalid Date:")
+    main_page.validation_check(MainPageLocators.debt_apr, "1.01", "Invalid Date:")
+    main_page.validation_check(MainPageLocators.debt_apr, "99", "Invalid Date:")
+    main_page.validation_check(MainPageLocators.debt_apr, "99,1", "\"APR\" is out of range: 0<=APR<=99")
+    main_page.validation_check(MainPageLocators.debt_apr, "100", "\"APR\" is out of range: 0<=APR<=99")
+    
+def test_debt_dialog_validation_apr(dpp):
+    base_page = page.BasePage(dpp)
+    base_page.open_main_page_as_guest()
+    main_page = page.MainPage(dpp)
+    main_page.click(MainPageLocators.add_button)
+    main_page.send_keys(MainPageLocators.debt_name_edit, "Name")
+    main_page.send_keys(MainPageLocators.debt_balance, randint(1, 10000000))
+    main_page.send_keys(MainPageLocators.debt_minimum, randint(1, 10000000))
+    main_page.send_keys(MainPageLocators.debt_apr, randint(0, 99))
+    main_page.click(MainPageLocators.has_promo)
+    main_page.click(MainPageLocators.promo_expires_date)
+    main_page.click(main_page.get_elements(MainPageLocators.date)[randint(1, 28)])
+    main_page.validation_check(MainPageLocators.promo_apr, "-1", "\"Promo APR\" is out of range: 0<=Promo APR<=99")
+    main_page.validation_check(MainPageLocators.promo_apr, "-0.01", "\"Promo APR\" is out of range: 0<=Promo APR<=99")
+    main_page.validation_check(MainPageLocators.promo_apr, "99,1", "\"Promo APR\" is out of range: 0<=Promo APR<=99")
+    main_page.validation_check(MainPageLocators.promo_apr, "100", "\"Promo APR\" is out of range: 0<=Promo APR<=99")
+    main_page.validate_promo_apr(0)
+    main_page.validate_promo_apr(0.01)
+    main_page.validate_promo_apr(0.99)
+    main_page.validate_promo_apr(99)
+    

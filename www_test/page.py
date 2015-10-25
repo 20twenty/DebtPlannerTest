@@ -88,3 +88,19 @@ class MainPage(BasePage):
         self.click(MainPageLocators.delete_account)
         self.send_keys(MainPageLocators.delete_account_password, password)
         self.click(MainPageLocators.delete_account)
+
+    def validation_check(self, object, value, error_message = None):
+        self.send_keys(object, value)
+        self.click(MainPageLocators.save_button)
+        if error_message:
+            actual = self.get_text(MainPageLocators.popup_text)
+            print "Compare error text expected: '%s' and actual: '%s'." % (error_message, actual)
+            assert(actual == error_message)
+            self.click(MainPageLocators.confirm_button)
+        
+    def validate_promo_apr(self, value):
+        self.send_keys(MainPageLocators.promo_apr, value)
+        self.click(MainPageLocators.save_button)
+        self.click(MainPageLocators.debt_name)   
+        self.click(MainPageLocators.debt_details)
+        
