@@ -98,8 +98,8 @@ class MainPage(BasePage):
             assert(actual == error_message)
             self.click(MainPageLocators.confirm_button)
         
-    def validate_promo_apr(self, value):
-        self.send_keys(MainPageLocators.promo_apr, value)
+    def validate_debt_field(self, object, value):
+        self.send_keys(object, value)
         self.click(MainPageLocators.save_button)
         self.click(MainPageLocators.debt_name)   
         self.click(MainPageLocators.debt_details)

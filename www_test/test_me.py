@@ -158,6 +158,7 @@ def test_debt_dialog_validation_minimum_payment(dpp):
     main_page.validation_check(MainPageLocators.debt_minimum, "10000001", "\"Minimum payment\" is out of range: 0<=Minimum payment<=10000000")
     
 def test_debt_dialog_validation_apr(dpp):
+    error_message = "\"APR\" is out of range: 0<=APR<=99"
     base_page = page.BasePage(dpp)
     base_page.open_main_page_as_guest()
     main_page = page.MainPage(dpp)
@@ -165,13 +166,18 @@ def test_debt_dialog_validation_apr(dpp):
     main_page.send_keys(MainPageLocators.debt_name_edit, "Name")
     main_page.send_keys(MainPageLocators.debt_balance, randint(1, 10000000))
     main_page.send_keys(MainPageLocators.debt_minimum, randint(1, 10000000))
-    main_page.click(MainPageLocators.has_promo)
-    main_page.validation_check(MainPageLocators.debt_apr, "-1", "\"APR\" is out of range: 0<=APR<=99")
-    main_page.validation_check(MainPageLocators.debt_apr, "-0.01", "\"APR\" is out of range: 0<=APR<=99")
-    main_page.validation_check(MainPageLocators.debt_apr, "99.1", "\"APR\" is out of range: 0<=APR<=99")
-    main_page.validation_check(MainPageLocators.debt_apr, "100", "\"APR\" is out of range: 0<=APR<=99")
+    main_page.validation_check(MainPageLocators.debt_apr, "-1", error_message)
+    main_page.validation_check(MainPageLocators.debt_apr, "-0.01", error_message)
+    main_page.validation_check(MainPageLocators.debt_apr, "99.1", error_message)
+    main_page.validation_check(MainPageLocators.debt_apr, "100", error_message)
+    main_page.validate_debt_field(MainPageLocators.debt_apr, 0)
+    main_page.validate_debt_field(MainPageLocators.debt_apr, 0.01)
+    main_page.validate_debt_field(MainPageLocators.debt_apr, 0.99)
+    main_page.validate_debt_field(MainPageLocators.debt_apr, 1.01)
+    main_page.validate_debt_field(MainPageLocators.debt_apr, 99)
     
 def test_debt_dialog_validation_promo_apr(dpp):
+    error_message = "\"Promo APR\" is out of range: 0<=Promo APR<=99"
     base_page = page.BasePage(dpp)
     base_page.open_main_page_as_guest()
     main_page = page.MainPage(dpp)
@@ -183,14 +189,14 @@ def test_debt_dialog_validation_promo_apr(dpp):
     main_page.click(MainPageLocators.has_promo)
     main_page.click(MainPageLocators.promo_expires_date)
     main_page.click(main_page.get_elements(MainPageLocators.date)[randint(1, 28)])
-    main_page.validation_check(MainPageLocators.promo_apr, "-1", "\"Promo APR\" is out of range: 0<=Promo APR<=99")
-    main_page.validation_check(MainPageLocators.promo_apr, "-0.01", "\"Promo APR\" is out of range: 0<=Promo APR<=99")
-    main_page.validation_check(MainPageLocators.promo_apr, "99.1", "\"Promo APR\" is out of range: 0<=Promo APR<=99")
-    main_page.validation_check(MainPageLocators.promo_apr, "100", "\"Promo APR\" is out of range: 0<=Promo APR<=99")
-    main_page.validate_promo_apr(0)
-    main_page.validate_promo_apr(0.01)
-    main_page.validate_promo_apr(0.99)
-    main_page.validate_promo_apr(99)
+    main_page.validation_check(MainPageLocators.promo_apr, "-1", error_message)
+    main_page.validation_check(MainPageLocators.promo_apr, "-0.01", error_message)
+    main_page.validation_check(MainPageLocators.promo_apr, "99.1", error_message)
+    main_page.validation_check(MainPageLocators.promo_apr, "100", error_message)
+    main_page.validate_debt_field(MainPageLocators.promo_apr, 0)
+    main_page.validate_debt_field(MainPageLocators.promo_apr, 0.01)
+    main_page.validate_debt_field(MainPageLocators.promo_apr, 0.99)
+    main_page.validate_debt_field(MainPageLocators.promo_apr, 99)
     
 def test_validation_principal_payment(dpp):
     base_page = page.BasePage(dpp)
