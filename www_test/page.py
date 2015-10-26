@@ -99,7 +99,7 @@ class MainPage(BasePage):
             self.click(MainPageLocators.confirm_button)
         
     def validate_debt_field(self, object, value):
-        self.send_keys(object, value)
+        self.send_keys(object, str(value))
         self.click(MainPageLocators.save_button)
         self.click(MainPageLocators.debt_name)   
         self.click(MainPageLocators.debt_details)
