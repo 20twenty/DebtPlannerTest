@@ -19,8 +19,6 @@ class MainPageLocators(object):
 #    Debt details
     debt_display = (By.CSS_SELECTOR, "#account_dialog #delete_account_button")
     debt_name = (By.CSS_SELECTOR, '.debt_name')
-    debt_payment_amount = (By.CSS_SELECTOR, '.add_debt_payment_amount')
-    debt_payment_made = (By.CSS_SELECTOR, '#individual_made_payment_display .made_debt_payment_amount')
     other_options = (By.CSS_SELECTOR, '#other_options')
     add_button = (By.CSS_SELECTOR, '#add_button')
     use_example = (By.CSS_SELECTOR, '#debt_dialog #use_example')
@@ -40,6 +38,14 @@ class MainPageLocators(object):
     promo_apr = (By.CSS_SELECTOR, '#promo_apr[placeholder]')
     month_prev = (By.CSS_SELECTOR, "[title='Prev']")
     month_next = (By.CSS_SELECTOR, "[title='Next']")
+    remove_made_payment_button = (By.CSS_SELECTOR, "#individual_made_payment_display #remove_made_payment_button_img")
+    debt_payment_amount = (By.CSS_SELECTOR, '.add_debt_payment_amount')
+    made_debt_payment_amount = (By.CSS_SELECTOR, '.made_debt_payment_amount')
+    principal_payment_calculator = (By.CSS_SELECTOR, "#principal_payment_calculator")
+    total_paid_input = (By.CSS_SELECTOR, "#total_paid_input")
+    interest_accrued_input = (By.CSS_SELECTOR, "#interest_accrued_input")
+    new_expenses_input = (By.CSS_SELECTOR, "#new_expenses_input")
+    calculate_principal = (By.CSS_SELECTOR, "#calculate_principal")
     
 #    Account manage
     menu_active_account = (By.CSS_SELECTOR, '#menu_active_account')

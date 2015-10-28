@@ -52,9 +52,20 @@ class BasePageElement(object):
         element = self.get_element(obj)
         element.clear()
         webdriver.ActionChains(self.dpp).move_to_element(element).send_keys_to_element(element, text).perform()
+    
+    def clear(self, obj):
+        """Types text to the specified object"""
+        element = self.get_element(obj)
+        element.clear()
         
     def is_displayed(self, obj, throw_error = True):
         """Checks if the specified object is displayed"""
+        result = True
         if throw_error:
-            self.get_element(obj)
-        return self.dpp.find_element(*obj).is_displayed()
+            return self.get_element(obj).is_displayed()
+        else:
+            try:
+                result = self.dpp.find_element(*obj).is_displayed()
+            except:
+                return False
+        return result

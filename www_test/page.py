@@ -48,6 +48,15 @@ class MainPage(BasePage):
         self.click(MainPageLocators.use_example)
         self.click(MainPageLocators.save_button)
         WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page))
+     
+    def add_debt_parametrized(self, name, balance, minimum, apr):
+        self.click(MainPageLocators.add_button)
+        self.send_keys(MainPageLocators.debt_name_edit, name)
+        self.send_keys(MainPageLocators.debt_balance, balance)
+        self.send_keys(MainPageLocators.debt_minimum, minimum)
+        self.send_keys(MainPageLocators.debt_apr, apr)
+        self.click(MainPageLocators.save_button)
+        WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page))
         
     def get_debts(self):
         debt_display = self.dpp.find_elements(*MainPageLocators.debt_display)
@@ -64,9 +73,19 @@ class MainPage(BasePage):
         self.click(MainPageLocators.save_button)
         WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page)) 
     
+    def remove_payment_ammount(self, all = False):
+        self.click(MainPageLocators.debt_name)
+        if all:
+            while self.is_displayed(MainPageLocators.remove_made_payment_button, False):
+                self.click(MainPageLocators.remove_made_payment_button)
+        else:
+            self.click(MainPageLocators.remove_made_payment_button)
+        self.click(MainPageLocators.save_button)
+        WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page))    
+    
     def check_payment_ammount(self, amount):
         self.click(MainPageLocators.debt_name)
-        actual = self.get_text(MainPageLocators.debt_payment_made) 
+        actual = self.get_text(MainPageLocators.made_debt_payment_amount) 
         print "Compare amount expected %s and actual %s." % (amount, actual) 
         assert(float(amount) == float(actual))
         
@@ -89,9 +108,10 @@ class MainPage(BasePage):
         self.send_keys(MainPageLocators.delete_account_password, password)
         self.click(MainPageLocators.delete_account)
 
-    def validation_check(self, object, value, error_message = None):
-        self.send_keys(object, value)
-        self.click(MainPageLocators.save_button)
+    def validation_check(self, object_to_type, object_to_click, value, error_message = None):
+        if object_to_type:
+            self.send_keys(object_to_type, value) 
+        self.click(object_to_click)
         if error_message:
             actual = self.get_text(MainPageLocators.popup_text)
             print "Compare error text expected: '%s' and actual: '%s'." % (error_message, actual)
