@@ -69,7 +69,7 @@ class MainPage(BasePage):
         
     def add_payment_ammount(self, amount):
         self.click(MainPageLocators.debt_name)
-        self.send_keys(MainPageLocators.debt_payment_amount, amount)
+        self.send_keys(MainPageLocators.debt_payment_amount, str(amount))
         self.click(MainPageLocators.save_button)
         WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page)) 
     
