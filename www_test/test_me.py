@@ -215,8 +215,9 @@ def test_validation_principal_payment(dpp):
     main_page.add_payment_ammount(9999999.99)
     main_page.remove_payment_ammount()
     main_page.add_payment_ammount(-9999999.99)
+    main_page.remove_payment_ammount()
     main_page.add_payment_ammount(10000000)
-    main_page.remove_payment_ammount(True)
+    main_page.remove_payment_ammount()
     main_page.add_payment_ammount(-0.01)
     main_page.add_payment_ammount(0)
     main_page.add_payment_ammount(0.01)
@@ -230,4 +231,44 @@ def test_validation_principal_payment(dpp):
 #    Check empty payment amount field
     main_page.clear(MainPageLocators.made_debt_payment_amount)
     main_page.validation_check(None, MainPageLocators.save_button, None, "\"Made Payment Amount\" is not a valid number.")
+    
+def test_validation_principal_calculator_total_payment(dpp):
+    payment = 10000000
+    base_page = page.BasePage(dpp)
+    base_page.open_main_page_as_guest()
+    main_page = page.MainPage(dpp)
+    main_page.add_debt_parametrized("name", payment, randint(1, 10000000), randint(1, 99))    
+    main_page.click(MainPageLocators.debt_name)
+    main_page.click(MainPageLocators.principal_payment_calculator)
+    main_page.click(MainPageLocators.use_plan_estimate)
+    
+    #Check total_paid_input field
+    error_message = "\"Total Paid\" is out of range: 0<=Total Paid<=10000000"
+    main_page.validation_check(MainPageLocators.total_paid_input, MainPageLocators.calculate_principal, -1, error_message)
+    main_page.validation_check(MainPageLocators.total_paid_input, MainPageLocators.calculate_principal, -0.01, error_message)
+    main_page.validation_check(MainPageLocators.total_paid_input, MainPageLocators.calculate_principal, 0)
+    main_page.validation_check(MainPageLocators.total_paid_input, MainPageLocators.calculate_principal, 0.01)
+    main_page.validation_check(MainPageLocators.total_paid_input, MainPageLocators.calculate_principal, payment + 1, error_message)
+    main_page.validation_check(MainPageLocators.total_paid_input, MainPageLocators.calculate_principal, payment)
+    
+    #Check interest_accrued_input field
+    error_message = "\"Interest accrued\" is out of range: 0<=Interest accrued<=10000000"
+    main_page.validation_check(MainPageLocators.interest_accrued_input, MainPageLocators.calculate_principal, -1, error_message)
+    main_page.validation_check(MainPageLocators.interest_accrued_input, MainPageLocators.calculate_principal, -0.01, error_message)
+    main_page.validation_check(MainPageLocators.interest_accrued_input, MainPageLocators.calculate_principal, 0)
+    main_page.validation_check(MainPageLocators.interest_accrued_input, MainPageLocators.calculate_principal, 0.01)
+    main_page.validation_check(MainPageLocators.interest_accrued_input, MainPageLocators.calculate_principal, payment + 1, error_message)
+    main_page.validation_check(MainPageLocators.interest_accrued_input, MainPageLocators.calculate_principal, payment)
+    
+    #Check new_expenses_input field
+    error_message = "\"New expenses\" is out of range: 0<=New expenses<=10000000"
+    main_page.validation_check(MainPageLocators.new_expenses_input, MainPageLocators.calculate_principal, -1, error_message)
+    main_page.validation_check(MainPageLocators.new_expenses_input, MainPageLocators.calculate_principal, -0.01, error_message)
+    main_page.validation_check(MainPageLocators.new_expenses_input, MainPageLocators.calculate_principal, 0)
+    main_page.validation_check(MainPageLocators.new_expenses_input, MainPageLocators.calculate_principal, 0.01)
+    main_page.validation_check(MainPageLocators.new_expenses_input, MainPageLocators.calculate_principal, payment + 1, error_message)
+    main_page.validation_check(MainPageLocators.new_expenses_input, MainPageLocators.calculate_principal, payment)
+    
+def test_validation_principal_calculator_interest_accrued(dpp):
+    error_message = "\"Interest accrued\" is not a valid number."
     

@@ -46,6 +46,11 @@ class MainPageLocators(object):
     interest_accrued_input = (By.CSS_SELECTOR, "#interest_accrued_input")
     new_expenses_input = (By.CSS_SELECTOR, "#new_expenses_input")
     calculate_principal = (By.CSS_SELECTOR, "#calculate_principal")
+    use_plan_estimate = (By.CSS_SELECTOR, "#use_plan_estimate")
+    
+#    Payoff Plan
+    debt_step = (By.CSS_SELECTOR, "#payment_plan_list div[id*='step']:not(.df_wrapper)")
+    debt_free = (By.CSS_SELECTOR, "#payment_plan_list .df_wrapper")
     
 #    Account manage
     menu_active_account = (By.CSS_SELECTOR, '#menu_active_account')
