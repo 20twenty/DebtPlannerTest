@@ -110,7 +110,7 @@ class MainPage(BasePage):
 
     def validation_check(self, object_to_type, object_to_click, value, error_message = None):
         if object_to_type:
-            self.send_keys(object_to_type, value) 
+            self.send_keys(object_to_type, str(value)) 
         self.click(object_to_click)
         if error_message:
             actual = self.get_text(MainPageLocators.popup_text)
