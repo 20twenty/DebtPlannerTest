@@ -18,6 +18,11 @@ class BasePageElement(object):
             return value
         return text
 
+    def get_attribute(self, obj, attribute):
+        """Gets the text of the specified object"""
+        element = self.get_element(obj)
+        return element.get_attribute(attribute)
+
     def get_element(self, obj):
         """Returns an element of specified object"""
         if type(obj) is WebElement:

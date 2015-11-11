@@ -59,7 +59,7 @@ class MainPage(BasePage):
         WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page))
         
     def get_debts(self):
-        debt_display = self.dpp.find_elements(*MainPageLocators.debt_display)
+        self.dpp.find_elements(*MainPageLocators.debt_display)
         
     def delete_debt(self):
         self.click(MainPageLocators.debt_name)
@@ -88,6 +88,24 @@ class MainPage(BasePage):
         actual = self.get_text(MainPageLocators.made_debt_payment_amount) 
         print "Compare amount expected %s and actual %s." % (amount, actual) 
         assert(float(amount) == float(actual))
+        
+    def check_payment_progress(self, starting_balance, current_payment):
+        debt_payoff_progress_bar_paid = self.get_attribute(MainPageLocators.debt_payoff_progress_bar_paid, "style")
+        start = 'width: '
+        end = '%'
+        #Get paid amount
+        start_position = debt_payoff_progress_bar_paid.index(start) + len(start)
+        end_position = debt_payoff_progress_bar_paid.index(end) + len(end) - 1
+        debt_payoff_progress_bar_paid = debt_payoff_progress_bar_paid[start_position: end_position]
+        assert(int(current_payment) == int(debt_payoff_progress_bar_paid))
+
+        if starting_balance != current_payment:
+            debt_payoff_progress_bar_remaining = self.get_attribute(MainPageLocators.debt_payoff_progress_bar_remaining, "style")
+            #Get remaining amount
+            start_position = debt_payoff_progress_bar_remaining.index(start) + len(start)
+            end_position = debt_payoff_progress_bar_remaining.index(end) + len(end) - 1
+            debt_payoff_progress_bar_remaining = debt_payoff_progress_bar_remaining[start_position: end_position]
+            assert(100 - int(current_payment) == int(debt_payoff_progress_bar_remaining))
         
     def logout(self):
         self.click(MainPageLocators.menu_active_account)
@@ -123,4 +141,4 @@ class MainPage(BasePage):
         self.click(MainPageLocators.save_button)
         self.click(MainPageLocators.debt_name)   
         self.click(MainPageLocators.debt_details)
-        
+

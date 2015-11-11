@@ -15,23 +15,23 @@ class MainPageLocators(object):
     onboarding_div = (By.CSS_SELECTOR, '#onboarding_div')
     confirm_button = (By.CSS_SELECTOR, "[style*='display: block'] button.ui-button-text-only")
     popup_text = (By.CSS_SELECTOR, "[style*='display: block'] .ui-dialog-content")
+    delete_confirm = (By.CSS_SELECTOR, "[aria-describedby='remove_debt_dialog']:not([style*=none]) button:nth-child(1)")
     
 #    Debt details
+    add_button = (By.CSS_SELECTOR, '#add_button')
     debt_display = (By.CSS_SELECTOR, "#account_dialog #delete_account_button")
     debt_name = (By.CSS_SELECTOR, '.debt_name')
-    other_options = (By.CSS_SELECTOR, '#other_options')
-    add_button = (By.CSS_SELECTOR, '#add_button')
-    use_example = (By.CSS_SELECTOR, '#debt_dialog #use_example')
-    save_button = (By.CSS_SELECTOR, '#debt_dialog #save_button')
-    delete = (By.CSS_SELECTOR, '#delete')
-    delete_confirm = (By.CSS_SELECTOR, "[aria-describedby='remove_debt_dialog']:not([style*=none]) button:nth-child(1)")
+    debt_payoff_progress_bar_paid = (By.CSS_SELECTOR, '.debt_payoff_progress_bar_paid[style]')
+    debt_payoff_progress_bar_remaining = (By.CSS_SELECTOR, '.debt_payoff_progress_bar_remaining[style]')
 
 #    Edit Debt dialog
+    save_button = (By.CSS_SELECTOR, '#debt_dialog #save_button')
     debt_details = (By.CSS_SELECTOR, "#debt_dialog #debt_details")
     debt_name_edit = (By.CSS_SELECTOR, '#debt_name[placeholder]')
     debt_balance = (By.CSS_SELECTOR, '#debt_balance[placeholder]')
     debt_minimum = (By.CSS_SELECTOR, '#debt_minimum[placeholder]')
     debt_apr = (By.CSS_SELECTOR, '#debt_apr[placeholder]')
+    use_example = (By.CSS_SELECTOR, '#debt_dialog #use_example')
     has_promo = (By.CSS_SELECTOR, '#has_promo')
     promo_expires_date = (By.CSS_SELECTOR, '.promo_expires_date[placeholder]')
     date = (By.CSS_SELECTOR, "[data-handler='selectDay']")
@@ -47,10 +47,14 @@ class MainPageLocators(object):
     new_expenses_input = (By.CSS_SELECTOR, "#new_expenses_input")
     calculate_principal = (By.CSS_SELECTOR, "#calculate_principal")
     use_plan_estimate = (By.CSS_SELECTOR, "#use_plan_estimate")
+    delete = (By.CSS_SELECTOR, '#delete')
+    other_options = (By.CSS_SELECTOR, '#other_options')
     
 #    Payoff Plan
     debt_step = (By.CSS_SELECTOR, "#payment_plan_list div[id*='step']:not(.df_wrapper)")
     debt_free = (By.CSS_SELECTOR, "#payment_plan_list .df_wrapper")
+    step_duration = (By.CSS_SELECTOR, ".step_duration")
+    step_payment = (By.CSS_SELECTOR, "#step_table tbody tr td:nth-of-type(2)")
     
 #    Account manage
     menu_active_account = (By.CSS_SELECTOR, '#menu_active_account')

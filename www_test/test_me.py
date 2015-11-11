@@ -1,10 +1,6 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC 
-from selenium.webdriver.common.by import By as By
 from random import randint
-from page import BasePage
-from page import LoginPage
-from page import MainPage
 from locators import BasePageLocators
 from locators import MainPageLocators
 from locators import LoginPageLocators
@@ -121,7 +117,7 @@ def test_delete_debt(dpp):
     assert(base_page.is_displayed(MainPageLocators.debt_name, False) != True)
 
 def test_title(dpp):
-   assert 'Debt Payoff Planner' == dpp.title
+    assert 'Debt Payoff Planner' == dpp.title
 
 def test_debt_dialog_validation_debt_name(dpp):
     error_message = "\"Name\" cannot be blank. Please fill in this field before continuing"
@@ -237,7 +233,7 @@ def test_validation_principal_calculator_total_payment(dpp):
     base_page = page.BasePage(dpp)
     base_page.open_main_page_as_guest()
     main_page = page.MainPage(dpp)
-    main_page.add_debt_parametrized("name", payment, randint(1, 10000000), randint(1, 99))    
+    main_page.add_debt_parametrized("name", randint(1, 10000000), randint(1, 10000000), randint(1, 99))    
     main_page.click(MainPageLocators.debt_name)
     main_page.click(MainPageLocators.principal_payment_calculator)
     main_page.click(MainPageLocators.use_plan_estimate)
@@ -269,6 +265,18 @@ def test_validation_principal_calculator_total_payment(dpp):
     main_page.validation_check(MainPageLocators.new_expenses_input, MainPageLocators.calculate_principal, payment + 1, error_message)
     main_page.validation_check(MainPageLocators.new_expenses_input, MainPageLocators.calculate_principal, payment)
     
-def test_validation_principal_calculator_interest_accrued(dpp):
-    error_message = "\"Interest accrued\" is not a valid number."
+def test_payoff_progress_add_50_payments(dpp):
+    starting_balance = 100
+    minimum_payment = 2
+    
+    base_page = page.BasePage(dpp)
+    base_page.open_main_page_as_guest()
+    main_page = page.MainPage(dpp)
+    main_page.add_debt_parametrized("progress test 50 principal payments", starting_balance, minimum_payment, 0)
+    current_payment = 0
+    while current_payment < starting_balance:    
+        main_page.add_payment_ammount(minimum_payment)
+        current_payment = current_payment + minimum_payment
+        main_page.check_payment_progress(starting_balance, current_payment)
+    
     
