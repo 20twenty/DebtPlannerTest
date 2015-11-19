@@ -21,6 +21,10 @@ class MainPageLocators(object):
     add_button = (By.CSS_SELECTOR, '#add_button')
     debt_display = (By.CSS_SELECTOR, "#account_dialog #delete_account_button")
     debt_name = (By.CSS_SELECTOR, '.debt_name')
+    current_balance = (By.CSS_SELECTOR, '.debt_balance')
+    debt_apr = (By.CSS_SELECTOR, '.debt_apr')
+    debt_minimum = (By.CSS_SELECTOR, '.debt_minimum')
+    debt_payoff_progress_percent = (By.CSS_SELECTOR, '.debt_payoff_progress_percent')
     debt_payoff_progress_bar_paid = (By.CSS_SELECTOR, '.debt_payoff_progress_bar_paid[style]')
     debt_payoff_progress_bar_remaining = (By.CSS_SELECTOR, '.debt_payoff_progress_bar_remaining[style]')
 
@@ -28,9 +32,9 @@ class MainPageLocators(object):
     save_button = (By.CSS_SELECTOR, '#debt_dialog #save_button')
     debt_details = (By.CSS_SELECTOR, "#debt_dialog #debt_details")
     debt_name_edit = (By.CSS_SELECTOR, '#debt_name[placeholder]')
-    debt_balance = (By.CSS_SELECTOR, '#debt_balance[placeholder]')
-    debt_minimum = (By.CSS_SELECTOR, '#debt_minimum[placeholder]')
-    debt_apr = (By.CSS_SELECTOR, '#debt_apr[placeholder]')
+    debt_balance_edit = (By.CSS_SELECTOR, '#debt_balance[placeholder]')
+    debt_minimum_edit = (By.CSS_SELECTOR, '#debt_minimum[placeholder]')
+    debt_apr_edit = (By.CSS_SELECTOR, '#debt_apr[placeholder]')
     use_example = (By.CSS_SELECTOR, '#debt_dialog #use_example')
     has_promo = (By.CSS_SELECTOR, '#has_promo')
     promo_expires_date = (By.CSS_SELECTOR, '.promo_expires_date[placeholder]')
@@ -53,7 +57,9 @@ class MainPageLocators(object):
 #    Payoff Plan
     debt_step = (By.CSS_SELECTOR, "#payment_plan_list div[id*='step']:not(.df_wrapper)")
     debt_free = (By.CSS_SELECTOR, "#payment_plan_list .df_wrapper")
+    step_number = (By.CSS_SELECTOR, ".step_number")
     step_duration = (By.CSS_SELECTOR, ".step_duration")
+    step_debt_name = (By.CSS_SELECTOR, "#step_table tbody tr td:nth-of-type(1)")
     step_payment = (By.CSS_SELECTOR, "#step_table tbody tr td:nth-of-type(2)")
     
 #    Account manage

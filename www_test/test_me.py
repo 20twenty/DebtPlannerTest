@@ -9,6 +9,7 @@ from locators import ValidatePageLocators
 from locators import ForgotPasswordPageLocators
 import page
 import mail
+import math
 
 # ---------------------------
 # ---- Tests start here -----
@@ -135,12 +136,12 @@ def test_debt_dialog_validation_debt_balance(dpp):
     main_page = page.MainPage(dpp)
     main_page.click(MainPageLocators.add_button)
     main_page.send_keys(MainPageLocators.debt_name_edit, "Name")
-    main_page.validation_check(MainPageLocators.debt_balance, MainPageLocators.save_button, "-1", error_message)
-    main_page.validation_check(MainPageLocators.debt_balance, MainPageLocators.save_button, "-0.01", error_message)
-    main_page.validation_check(MainPageLocators.debt_balance, MainPageLocators.save_button, "0", error_message_1)
-    main_page.validation_check(MainPageLocators.debt_balance, MainPageLocators.save_button, "0.01", error_message_1)
-    main_page.validation_check(MainPageLocators.debt_balance, MainPageLocators.save_button, "10000000", error_message_1)
-    main_page.validation_check(MainPageLocators.debt_balance, MainPageLocators.save_button, "10000001", error_message)
+    main_page.validation_check(MainPageLocators.debt_balance_edit, MainPageLocators.save_button, "-1", error_message)
+    main_page.validation_check(MainPageLocators.debt_balance_edit, MainPageLocators.save_button, "-0.01", error_message)
+    main_page.validation_check(MainPageLocators.debt_balance_edit, MainPageLocators.save_button, "0", error_message_1)
+    main_page.validation_check(MainPageLocators.debt_balance_edit, MainPageLocators.save_button, "0.01", error_message_1)
+    main_page.validation_check(MainPageLocators.debt_balance_edit, MainPageLocators.save_button, "10000000", error_message_1)
+    main_page.validation_check(MainPageLocators.debt_balance_edit, MainPageLocators.save_button, "10000001", error_message)
     
 def test_debt_dialog_validation_minimum_payment(dpp):
     error_message = "\"Minimum payment\" is out of range: 0<=Minimum payment<=10000000"
@@ -150,13 +151,13 @@ def test_debt_dialog_validation_minimum_payment(dpp):
     main_page = page.MainPage(dpp)
     main_page.click(MainPageLocators.add_button)
     main_page.send_keys(MainPageLocators.debt_name_edit, "Name")
-    main_page.send_keys(MainPageLocators.debt_balance, randint(1, 10000000))
-    main_page.validation_check(MainPageLocators.debt_minimum, MainPageLocators.save_button, "-1", error_message)
-    main_page.validation_check(MainPageLocators.debt_minimum, MainPageLocators.save_button, "-0.01", error_message)
-    main_page.validation_check(MainPageLocators.debt_minimum, MainPageLocators.save_button, "0", error_message_1)
-    main_page.validation_check(MainPageLocators.debt_minimum, MainPageLocators.save_button, "0.01", error_message_1)
-    main_page.validation_check(MainPageLocators.debt_minimum, MainPageLocators.save_button, "10000000", error_message_1)
-    main_page.validation_check(MainPageLocators.debt_minimum, MainPageLocators.save_button, "10000001", error_message)
+    main_page.send_keys(MainPageLocators.debt_balance_edit, randint(1, 10000000))
+    main_page.validation_check(MainPageLocators.debt_minimum_edit, MainPageLocators.save_button, "-1", error_message)
+    main_page.validation_check(MainPageLocators.debt_minimum_edit, MainPageLocators.save_button, "-0.01", error_message)
+    main_page.validation_check(MainPageLocators.debt_minimum_edit, MainPageLocators.save_button, "0", error_message_1)
+    main_page.validation_check(MainPageLocators.debt_minimum_edit, MainPageLocators.save_button, "0.01", error_message_1)
+    main_page.validation_check(MainPageLocators.debt_minimum_edit, MainPageLocators.save_button, "10000000", error_message_1)
+    main_page.validation_check(MainPageLocators.debt_minimum_edit, MainPageLocators.save_button, "10000001", error_message)
     
 def test_debt_dialog_validation_apr(dpp):
     error_message = "\"APR\" is out of range: 0<=APR<=99"
@@ -165,17 +166,17 @@ def test_debt_dialog_validation_apr(dpp):
     main_page = page.MainPage(dpp)
     main_page.click(MainPageLocators.add_button)
     main_page.send_keys(MainPageLocators.debt_name_edit, "Name")
-    main_page.send_keys(MainPageLocators.debt_balance, randint(1, 10000000))
-    main_page.send_keys(MainPageLocators.debt_minimum, randint(1, 10000000))
-    main_page.validation_check(MainPageLocators.debt_apr, MainPageLocators.save_button, "-1", error_message)
-    main_page.validation_check(MainPageLocators.debt_apr, MainPageLocators.save_button, "-0.01", error_message)
-    main_page.validation_check(MainPageLocators.debt_apr, MainPageLocators.save_button, "99.1", error_message)
-    main_page.validation_check(MainPageLocators.debt_apr, MainPageLocators.save_button, "100", error_message)
-    main_page.validate_debt_field(MainPageLocators.debt_apr, 0)
-    main_page.validate_debt_field(MainPageLocators.debt_apr, 0.01)
-    main_page.validate_debt_field(MainPageLocators.debt_apr, 0.99)
-    main_page.validate_debt_field(MainPageLocators.debt_apr, 1.01)
-    main_page.validate_debt_field(MainPageLocators.debt_apr, 99)
+    main_page.send_keys(MainPageLocators.debt_balance_edit, randint(1, 10000000))
+    main_page.send_keys(MainPageLocators.debt_minimum_edit, randint(1, 10000000))
+    main_page.validation_check(MainPageLocators.debt_apr_edit, MainPageLocators.save_button, "-1", error_message)
+    main_page.validation_check(MainPageLocators.debt_apr_edit, MainPageLocators.save_button, "-0.01", error_message)
+    main_page.validation_check(MainPageLocators.debt_apr_edit, MainPageLocators.save_button, "99.1", error_message)
+    main_page.validation_check(MainPageLocators.debt_apr_edit, MainPageLocators.save_button, "100", error_message)
+    main_page.validate_debt_field(MainPageLocators.debt_apr_edit, 0)
+    main_page.validate_debt_field(MainPageLocators.debt_apr_edit, 0.01)
+    main_page.validate_debt_field(MainPageLocators.debt_apr_edit, 0.99)
+    main_page.validate_debt_field(MainPageLocators.debt_apr_edit, 1.01)
+    main_page.validate_debt_field(MainPageLocators.debt_apr_edit, 99)
     
 def test_debt_dialog_validation_promo_apr(dpp):
     error_message = "\"Promo APR\" is out of range: 0<=Promo APR<=99"
@@ -184,9 +185,9 @@ def test_debt_dialog_validation_promo_apr(dpp):
     main_page = page.MainPage(dpp)
     main_page.click(MainPageLocators.add_button)
     main_page.send_keys(MainPageLocators.debt_name_edit, "Name")
-    main_page.send_keys(MainPageLocators.debt_balance, randint(1, 10000000))
-    main_page.send_keys(MainPageLocators.debt_minimum, randint(1, 10000000))
-    main_page.send_keys(MainPageLocators.debt_apr, randint(0, 99))
+    main_page.send_keys(MainPageLocators.debt_balance_edit, randint(1, 10000000))
+    main_page.send_keys(MainPageLocators.debt_minimum_edit, randint(1, 10000000))
+    main_page.send_keys(MainPageLocators.debt_apr_edit, randint(0, 99))
     main_page.click(MainPageLocators.has_promo)
     main_page.click(MainPageLocators.promo_expires_date)
     main_page.click(main_page.get_elements(MainPageLocators.date)[randint(1, 28)])
@@ -265,6 +266,42 @@ def test_validation_principal_calculator_total_payment(dpp):
     main_page.validation_check(MainPageLocators.new_expenses_input, MainPageLocators.calculate_principal, payment + 1, error_message)
     main_page.validation_check(MainPageLocators.new_expenses_input, MainPageLocators.calculate_principal, payment)
     
+def test_payoff_plan_estimate(dpp):
+    debt_name = "payoff plan estimate"
+    starting_balance = randint(1001, 10000000)
+    number_of_payments = randint(1, 10)
+    minimum_payment = math.ceil(starting_balance / number_of_payments) + 1
+    
+    base_page = page.BasePage(dpp)
+    base_page.open_main_page_as_guest()
+    main_page = page.MainPage(dpp)
+    main_page.add_debt_parametrized(debt_name, starting_balance, minimum_payment, 0)
+    
+    main_page.check_step_details(0, debt_name, minimum_payment, number_of_payments)
+    main_page.check_step_details(1, debt_name, starting_balance - minimum_payment * (number_of_payments - 1), 1)
+    
+def test_debt_details(dpp):
+    debt_name = "debt details check"
+    starting_balance = randint(1001, 10000000)
+    minimum_payment = randint(1, 1000)
+    apr = randint(1, 99)
+    payoff_progress = 0
+    
+    base_page = page.BasePage(dpp)
+    base_page.open_main_page_as_guest()
+    main_page = page.MainPage(dpp)
+    main_page.add_debt_parametrized(debt_name, starting_balance, minimum_payment, apr)
+    
+    current_balance = starting_balance
+    main_page.check_debt_details(debt_name, current_balance, minimum_payment, apr, payoff_progress)
+    
+    #add a payment and check debt details again
+    payment = float(starting_balance / randint(1, 10))
+    main_page.add_payment_ammount(payment)
+    current_balance = starting_balance - payment
+    payoff_progress = round(payment/float(starting_balance)*100)
+    main_page.check_debt_details(debt_name, current_balance, minimum_payment, apr, payoff_progress)
+    
 def test_payoff_progress_add_50_payments(dpp):
     starting_balance = 100
     minimum_payment = 2
@@ -278,5 +315,3 @@ def test_payoff_progress_add_50_payments(dpp):
         main_page.add_payment_ammount(minimum_payment)
         current_payment = current_payment + minimum_payment
         main_page.check_payment_progress(starting_balance, current_payment)
-    
-    

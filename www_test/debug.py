@@ -1,3 +1,3 @@
 import py
-args_str = "-k test_payoff_progress_add_50_payments"
+args_str = "-n 8"
 py.test.cmdline.main(args_str.split(" "))

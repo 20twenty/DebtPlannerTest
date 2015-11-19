@@ -5,6 +5,7 @@ from locators import BasePageLocators
 from locators import LoginPageLocators
 from locators import MainPageLocators
 from locators import CreateAccountPageLocators
+import common
 
 class BasePage(BasePageElement):
     """Base class to initialize the base page that will be called from all pages"""
@@ -52,9 +53,9 @@ class MainPage(BasePage):
     def add_debt_parametrized(self, name, balance, minimum, apr):
         self.click(MainPageLocators.add_button)
         self.send_keys(MainPageLocators.debt_name_edit, name)
-        self.send_keys(MainPageLocators.debt_balance, balance)
-        self.send_keys(MainPageLocators.debt_minimum, minimum)
-        self.send_keys(MainPageLocators.debt_apr, apr)
+        self.send_keys(MainPageLocators.debt_balance_edit, balance)
+        self.send_keys(MainPageLocators.debt_minimum_edit, minimum)
+        self.send_keys(MainPageLocators.debt_apr_edit, apr)
         self.click(MainPageLocators.save_button)
         WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page))
         
@@ -89,6 +90,19 @@ class MainPage(BasePage):
         print "Compare amount expected %s and actual %s." % (amount, actual) 
         assert(float(amount) == float(actual))
         
+    def check_debt_details(self, name, balance, apr, minimum, payoff_progress_percent):
+        debt_name = self.get_text(MainPageLocators.debt_name)
+        current_balance = self.get_text(MainPageLocators.current_balance).replace('$', '')
+        debt_apr = self.get_text(MainPageLocators.debt_apr).replace('%', '')
+        debt_minimum = self.get_text(MainPageLocators.debt_minimum).replace('$', '')
+        debt_payoff_progress_percent = self.get_text(MainPageLocators.debt_payoff_progress_percent).replace('%', '')
+        
+        assert(name == debt_name)
+        assert(float(balance) == float(current_balance))
+        assert(float(debt_apr) == float(debt_apr))
+        assert(float(debt_minimum) == float(debt_minimum))
+        assert(int(payoff_progress_percent) == int(debt_payoff_progress_percent))
+        
     def check_payment_progress(self, starting_balance, current_payment):
         debt_payoff_progress_bar_paid = self.get_attribute(MainPageLocators.debt_payoff_progress_bar_paid, "style")
         start = 'width: '
@@ -106,6 +120,25 @@ class MainPage(BasePage):
             end_position = debt_payoff_progress_bar_remaining.index(end) + len(end) - 1
             debt_payoff_progress_bar_remaining = debt_payoff_progress_bar_remaining[start_position: end_position]
             assert(100 - int(current_payment) == int(debt_payoff_progress_bar_remaining))
+        
+    def check_step_details(self, step_number, debt_name, minimum_payment, number_of_payments):
+        parent = self.get_elements(MainPageLocators.debt_step)[step_number]
+        step_debt_name = self.get_child_element(parent, MainPageLocators.step_debt_name)
+        step_payment = self.get_child_element(parent, MainPageLocators.step_payment)
+        step_duration = self.get_child_element(parent, MainPageLocators.step_duration)
+        
+        name = self.get_text(step_debt_name)
+        payment = self.get_text(step_payment).replace('$', '')
+        duration = self.get_text(step_duration)
+        
+        assert(debt_name == name)
+        assert(float(minimum_payment) == float(payment))
+        if number_of_payments > 1:
+            if number_of_payments > 2:
+                month = ' months'
+            if number_of_payments == 2:
+                month = ' months'
+            assert(str(number_of_payments - 1) + month == duration)
         
     def logout(self):
         self.click(MainPageLocators.menu_active_account)

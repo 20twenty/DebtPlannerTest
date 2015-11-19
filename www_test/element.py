@@ -19,9 +19,19 @@ class BasePageElement(object):
         return text
 
     def get_attribute(self, obj, attribute):
-        """Gets the text of the specified object"""
+        """Gets an attribute of the specified object"""
         element = self.get_element(obj)
         return element.get_attribute(attribute)
+
+    def get_child_element(self, parent, child):
+        """Returns an element of specified object"""
+        try:
+            WebDriverWait(self.dpp, 25).until(
+                lambda driver: parent.find_element(*child))
+        finally:
+            WebDriverWait(self.dpp, 5).until(
+                lambda driver: parent.find_element(*child))
+        return parent.find_element(*child)
 
     def get_element(self, obj):
         """Returns an element of specified object"""
