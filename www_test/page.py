@@ -53,9 +53,9 @@ class MainPage(BasePage):
     def add_debt_parametrized(self, name, balance, minimum, apr):
         self.click(MainPageLocators.add_button)
         self.send_keys(MainPageLocators.debt_name_edit, name)
-        self.send_keys(MainPageLocators.debt_balance_edit, balance)
-        self.send_keys(MainPageLocators.debt_minimum_edit, minimum)
-        self.send_keys(MainPageLocators.debt_apr_edit, apr)
+        self.send_keys(MainPageLocators.debt_balance_edit, str(balance))
+        self.send_keys(MainPageLocators.debt_minimum_edit, str(minimum))
+        self.send_keys(MainPageLocators.debt_apr_edit, str(apr))
         self.click(MainPageLocators.save_button)
         WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page))
         
