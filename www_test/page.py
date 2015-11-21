@@ -133,12 +133,12 @@ class MainPage(BasePage):
         
         assert(debt_name == name)
         assert(float(minimum_payment) == float(payment))
+        #if number_of_payments > 1:
         if number_of_payments > 1:
-            if number_of_payments > 2:
-                month = ' months'
-            if number_of_payments == 2:
-                month = ' months'
-            assert(str(number_of_payments - 1) + month == duration)
+            month = ' months'
+        if number_of_payments == 1:
+            month = ' month'
+        assert(str(number_of_payments) + month == duration)
         
     def logout(self):
         self.click(MainPageLocators.menu_active_account)

@@ -277,7 +277,7 @@ def test_payoff_plan_estimate(dpp):
     main_page = page.MainPage(dpp)
     main_page.add_debt_parametrized(debt_name, starting_balance, minimum_payment, 0)
     
-    main_page.check_step_details(0, debt_name, minimum_payment, number_of_payments)
+    main_page.check_step_details(0, debt_name, minimum_payment, (number_of_payments-1))
     main_page.check_step_details(1, debt_name, starting_balance - minimum_payment * (number_of_payments - 1), 1)
     
 def test_debt_details(dpp):
