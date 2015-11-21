@@ -33,6 +33,12 @@ class BasePageElement(object):
                 lambda driver: parent.find_element(*child))
         return parent.find_element(*child)
 
+    def get_element_contains_text(self, element, text):
+        elements = self.get_elements(element)
+        for element in elements:
+            if self.get_text(element) == str(text):
+                return element
+
     def get_element(self, obj):
         """Returns an element of specified object"""
         if type(obj) is WebElement:
@@ -66,7 +72,7 @@ class BasePageElement(object):
         """Types text to the specified object"""
         element = self.get_element(obj)
         element.clear()
-        webdriver.ActionChains(self.dpp).move_to_element(element).send_keys_to_element(element, text).perform()
+        webdriver.ActionChains(self.dpp).move_to_element(element).send_keys_to_element(element, str(text)).perform()
     
     def clear(self, obj):
         """Types text to the specified object"""

@@ -10,6 +10,7 @@ from locators import ForgotPasswordPageLocators
 import page
 import mail
 import math
+import common
 
 # ---------------------------
 # ---- Tests start here -----
@@ -80,7 +81,7 @@ def test_add_principal_payment(dpp):
     base_page.open_main_page_as_guest()
     main_page = page.MainPage(dpp)
     main_page.add_debt()
-    main_page.add_payment_ammount(20)
+    main_page.add_payment_ammount(20, common.get_datetime())
     main_page.check_payment_ammount(20)
 
 def test_account_create(dpp):
@@ -189,8 +190,7 @@ def test_debt_dialog_validation_promo_apr(dpp):
     main_page.send_keys(MainPageLocators.debt_minimum_edit, randint(1, 10000000))
     main_page.send_keys(MainPageLocators.debt_apr_edit, randint(0, 99))
     main_page.click(MainPageLocators.has_promo)
-    main_page.click(MainPageLocators.promo_expires_date)
-    main_page.click(main_page.get_elements(MainPageLocators.date)[randint(1, 28)])
+    main_page.set_date(MainPageLocators.promo_expires_date, common.get_datetime())
     main_page.validation_check(MainPageLocators.promo_apr, MainPageLocators.save_button, "-1", error_message)
     main_page.validation_check(MainPageLocators.promo_apr, MainPageLocators.save_button, "-0.01", error_message)
     main_page.validation_check(MainPageLocators.promo_apr, MainPageLocators.save_button, "99.1", error_message)
@@ -291,9 +291,16 @@ def test_debt_details(dpp):
     base_page.open_main_page_as_guest()
     main_page = page.MainPage(dpp)
     main_page.add_debt_parametrized(debt_name, starting_balance, minimum_payment, apr)
+    main_page.check_debt_details(debt_name, starting_balance, minimum_payment, apr, payoff_progress)
     
-    current_balance = starting_balance
-    main_page.check_debt_details(debt_name, current_balance, minimum_payment, apr, payoff_progress)
+    #edit a debt and check details
+    debt_name_new = "debt details edited"
+    starting_balance = randint(1001, 10000000)
+    minimum_payment = randint(1, 1000)
+    apr = randint(1, 99)
+    main_page.edit_debt(debt_name, debt_name_new, starting_balance, minimum_payment, apr)
+    debt_name = debt_name_new
+    main_page.check_debt_details(debt_name, starting_balance, minimum_payment, apr, payoff_progress)
     
     #add a payment and check debt details again
     payment = float(starting_balance / randint(1, 10))
@@ -301,6 +308,44 @@ def test_debt_details(dpp):
     current_balance = starting_balance - payment
     payoff_progress = round(payment/float(starting_balance)*100)
     main_page.check_debt_details(debt_name, current_balance, minimum_payment, apr, payoff_progress)
+    
+    #add another debt
+    debt_name = "debt details check - two debts"
+    starting_balance = randint(1001, 10000000)
+    minimum_payment = randint(1, 1000)
+    apr = randint(1, 99)
+    payoff_progress = 0
+    main_page.add_debt_parametrized(debt_name, starting_balance, minimum_payment, apr)
+    main_page.check_debt_details(debt_name, starting_balance, minimum_payment, apr, payoff_progress)
+    
+def test_check_ordering_of_debts(dpp):
+    debt_name = "debt ordering check"
+    starting_balance = randint(1001, 10000000)
+    minimum_payment = randint(1, 1000)
+    apr = randint(1, 99)
+    payoff_progress = 0
+    
+    base_page = page.BasePage(dpp)
+    base_page.open_main_page_as_guest()
+    main_page = page.MainPage(dpp)
+    main_page.add_debt_parametrized(debt_name, starting_balance, minimum_payment, apr)
+    main_page.check_debt_details(debt_name, starting_balance, minimum_payment, apr, payoff_progress, 0)
+    assert(float(main_page.get_text(MainPageLocators.minimum_payment).replace('$','').replace(' +','')) == minimum_payment)
+    
+    debt_name_1 = "debt ordering check second loan"
+    starting_balance_1 = randint(1001, 10000000)
+    minimum_payment_1 = randint(1, 1000)
+    apr_1 = randint(1, 99)
+    payoff_progress_1 = 0
+    main_page.add_debt_parametrized(debt_name_1, starting_balance_1, minimum_payment_1, apr_1)
+    main_page.check_debt_details(debt_name_1, starting_balance_1, minimum_payment_1, apr_1, payoff_progress_1, 1)
+    assert(float(main_page.get_text(MainPageLocators.minimum_payment).replace('$','').replace(' +','')) == float(minimum_payment + minimum_payment_1))
+    
+    #edit position of a debt
+    main_page.edit_debt(debt_name, None, None, None, None, 1)
+    main_page.check_debt_details(debt_name, starting_balance, minimum_payment, apr, payoff_progress, 1)
+    main_page.check_debt_details(debt_name_1, starting_balance_1, minimum_payment_1, apr_1, payoff_progress_1, 0)
+    assert(float(main_page.get_text(MainPageLocators.minimum_payment).replace('$','').replace(' +','')) == float(minimum_payment + minimum_payment_1))
     
 def test_payoff_progress_add_50_payments(dpp):
     starting_balance = 100

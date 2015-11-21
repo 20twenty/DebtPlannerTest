@@ -1,3 +1,4 @@
+import datetime
 
 def get_number(s):
     l = []
@@ -6,3 +7,6 @@ def get_number(s):
             l.append(float(t))
         except ValueError:
             pass
+        
+def get_datetime():
+    return datetime.datetime.now()        
