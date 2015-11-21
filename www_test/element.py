@@ -33,6 +33,12 @@ class BasePageElement(object):
                 lambda driver: parent.find_element(*child))
         return parent.find_element(*child)
 
+    def get_element_contains_text(self, element, text):
+        elements = self.get_elements(element)
+        for element in elements:
+            if self.get_text(element) == str(text):
+                return element
+
     def get_element(self, obj):
         """Returns an element of specified object"""
         if type(obj) is WebElement:

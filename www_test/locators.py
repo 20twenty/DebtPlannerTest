@@ -20,6 +20,7 @@ class MainPageLocators(object):
 #    Debt details
     add_button = (By.CSS_SELECTOR, '#add_button')
     debt_display = (By.CSS_SELECTOR, "#account_dialog #delete_account_button")
+    debt_container = (By.CSS_SELECTOR, "#debt_container > div")
     debt_name = (By.CSS_SELECTOR, '.debt_name')
     current_balance = (By.CSS_SELECTOR, '.debt_balance')
     debt_apr = (By.CSS_SELECTOR, '.debt_apr')
@@ -37,13 +38,18 @@ class MainPageLocators(object):
     debt_apr_edit = (By.CSS_SELECTOR, '#debt_apr[placeholder]')
     use_example = (By.CSS_SELECTOR, '#debt_dialog #use_example')
     has_promo = (By.CSS_SELECTOR, '#has_promo')
+    #date
     promo_expires_date = (By.CSS_SELECTOR, '.promo_expires_date[placeholder]')
+    year  = (By.CSS_SELECTOR, '.ui-datepicker-year')
+    month = (By.CSS_SELECTOR, 'ui-datepicker-month')
     date = (By.CSS_SELECTOR, "[data-handler='selectDay']")
     promo_apr = (By.CSS_SELECTOR, '#promo_apr[placeholder]')
     month_prev = (By.CSS_SELECTOR, "[title='Prev']")
     month_next = (By.CSS_SELECTOR, "[title='Next']")
+    
     remove_made_payment_button = (By.CSS_SELECTOR, "#individual_made_payment_display #remove_made_payment_button_img")
     debt_payment_amount = (By.CSS_SELECTOR, '.add_debt_payment_amount')
+    debt_payment_date = (By.CSS_SELECTOR, '.add_debt_payment_date.hasDatepicker')
     made_debt_payment_amount = (By.CSS_SELECTOR, '.made_debt_payment_amount')
     principal_payment_calculator = (By.CSS_SELECTOR, "#principal_payment_calculator")
     total_paid_input = (By.CSS_SELECTOR, "#total_paid_input")

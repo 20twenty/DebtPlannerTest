@@ -6,6 +6,9 @@ from locators import LoginPageLocators
 from locators import MainPageLocators
 from locators import CreateAccountPageLocators
 import common
+from datetime import date
+from calendar import calendar
+import datetime
 
 class BasePage(BasePageElement):
     """Base class to initialize the base page that will be called from all pages"""
@@ -50,12 +53,38 @@ class MainPage(BasePage):
         self.click(MainPageLocators.save_button)
         WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page))
      
+    def set_date(self, field, date):
+        if date == None:
+            date = common.get_datetime()()
+        self.click(field)
+        
+        #set year
+        while int(self.get_text(MainPageLocators.year)) < date.year:
+            self.click(MainPageLocators.month_prev)
+        
+        #set day
+        self.click(self.get_element_contains_text(MainPageLocators.date, date.day))
+     
     def add_debt_parametrized(self, name, balance, minimum, apr):
         self.click(MainPageLocators.add_button)
         self.send_keys(MainPageLocators.debt_name_edit, name)
         self.send_keys(MainPageLocators.debt_balance_edit, str(balance))
         self.send_keys(MainPageLocators.debt_minimum_edit, str(minimum))
         self.send_keys(MainPageLocators.debt_apr_edit, str(apr))
+        self.click(MainPageLocators.save_button)
+        WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page))
+        
+    def edit_debt(self, old_name, new_name, balance, minimum, apr):
+        self.click(self.get_debt_by_name(old_name))
+        self.click(MainPageLocators.debt_details)
+        if new_name != None:
+            self.send_keys(MainPageLocators.debt_name_edit, new_name)
+        if balance != None:
+            self.send_keys(MainPageLocators.debt_balance_edit, str(balance))
+        if minimum != None:
+            self.send_keys(MainPageLocators.debt_minimum_edit, str(minimum))
+        if apr != None:
+            self.send_keys(MainPageLocators.debt_apr_edit, str(apr))
         self.click(MainPageLocators.save_button)
         WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page))
         
@@ -68,9 +97,12 @@ class MainPage(BasePage):
         self.click(MainPageLocators.delete)
         self.click(MainPageLocators.delete_confirm)
         
-    def add_payment_ammount(self, amount):
+    def add_payment_ammount(self, amount, date = None):
         self.click(MainPageLocators.debt_name)
         self.send_keys(MainPageLocators.debt_payment_amount, str(amount))
+        if date != None:
+            #set day
+            self.set_date(MainPageLocators.debt_payment_date, date)
         self.click(MainPageLocators.save_button)
         WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page)) 
     
@@ -91,17 +123,24 @@ class MainPage(BasePage):
         assert(float(amount) == float(actual))
         
     def check_debt_details(self, name, balance, apr, minimum, payoff_progress_percent):
-        debt_name = self.get_text(MainPageLocators.debt_name)
-        current_balance = self.get_text(MainPageLocators.current_balance).replace('$', '')
-        debt_apr = self.get_text(MainPageLocators.debt_apr).replace('%', '')
-        debt_minimum = self.get_text(MainPageLocators.debt_minimum).replace('$', '')
-        debt_payoff_progress_percent = self.get_text(MainPageLocators.debt_payoff_progress_percent).replace('%', '')
+        debt_container = self.get_debt_by_name(name)
+        debt_name = self.get_text(self.get_child_element(debt_container, MainPageLocators.debt_name))
+        current_balance = self.get_text(self.get_child_element(debt_container, MainPageLocators.current_balance)).replace('$', '')
+        debt_apr = self.get_text(self.get_child_element(debt_container, MainPageLocators.debt_apr)).replace('%', '')
+        debt_minimum = self.get_text(self.get_child_element(debt_container, MainPageLocators.debt_minimum)).replace('$', '')
+        debt_payoff_progress_percent = self.get_text(self.get_child_element(debt_container, MainPageLocators.debt_payoff_progress_percent)).replace('%', '')
         
         assert(name == debt_name)
         assert(float(balance) == float(current_balance))
         assert(float(debt_apr) == float(debt_apr))
         assert(float(debt_minimum) == float(debt_minimum))
         assert(int(payoff_progress_percent) == int(debt_payoff_progress_percent))
+        
+    def get_debt_by_name(self, debt_name):
+        debt_containers = self.get_elements(MainPageLocators.debt_container)
+        for debt_container in debt_containers:
+            if self.get_text(self.get_child_element(debt_container, MainPageLocators.debt_name)) == debt_name:
+                return debt_container
         
     def check_payment_progress(self, starting_balance, current_payment):
         debt_payoff_progress_bar_paid = self.get_attribute(MainPageLocators.debt_payoff_progress_bar_paid, "style")
