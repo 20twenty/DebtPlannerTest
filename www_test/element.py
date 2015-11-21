@@ -72,7 +72,7 @@ class BasePageElement(object):
         """Types text to the specified object"""
         element = self.get_element(obj)
         element.clear()
-        webdriver.ActionChains(self.dpp).move_to_element(element).send_keys_to_element(element, text).perform()
+        webdriver.ActionChains(self.dpp).move_to_element(element).send_keys_to_element(element, str(text)).perform()
     
     def clear(self, obj):
         """Types text to the specified object"""

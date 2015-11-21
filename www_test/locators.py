@@ -36,6 +36,7 @@ class MainPageLocators(object):
     debt_balance_edit = (By.CSS_SELECTOR, '#debt_balance[placeholder]')
     debt_minimum_edit = (By.CSS_SELECTOR, '#debt_minimum[placeholder]')
     debt_apr_edit = (By.CSS_SELECTOR, '#debt_apr[placeholder]')
+    debt_position_select = (By.CSS_SELECTOR, '#position_div[style] > #debt_position_select > option')
     use_example = (By.CSS_SELECTOR, '#debt_dialog #use_example')
     has_promo = (By.CSS_SELECTOR, '#has_promo')
     #date
@@ -59,6 +60,9 @@ class MainPageLocators(object):
     use_plan_estimate = (By.CSS_SELECTOR, "#use_plan_estimate")
     delete = (By.CSS_SELECTOR, '#delete')
     other_options = (By.CSS_SELECTOR, '#other_options')
+    
+#    Strategy
+    minimum_payment = (By.CSS_SELECTOR, '#minimum_payment')
     
 #    Payoff Plan
     debt_step = (By.CSS_SELECTOR, "#payment_plan_list div[id*='step']:not(.df_wrapper)")

@@ -74,7 +74,7 @@ class MainPage(BasePage):
         self.click(MainPageLocators.save_button)
         WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page))
         
-    def edit_debt(self, old_name, new_name, balance, minimum, apr):
+    def edit_debt(self, old_name, new_name, balance, minimum, apr, position = None):
         self.click(self.get_debt_by_name(old_name))
         self.click(MainPageLocators.debt_details)
         if new_name != None:
@@ -85,6 +85,8 @@ class MainPage(BasePage):
             self.send_keys(MainPageLocators.debt_minimum_edit, str(minimum))
         if apr != None:
             self.send_keys(MainPageLocators.debt_apr_edit, str(apr))
+        if position != None:
+            self.click(self.get_elements(MainPageLocators.debt_position_select)[position])
         self.click(MainPageLocators.save_button)
         WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page))
         
@@ -122,8 +124,10 @@ class MainPage(BasePage):
         print "Compare amount expected %s and actual %s." % (amount, actual) 
         assert(float(amount) == float(actual))
         
-    def check_debt_details(self, name, balance, apr, minimum, payoff_progress_percent):
+    def check_debt_details(self, name, balance, apr, minimum, payoff_progress_percent, position = None):
         debt_container = self.get_debt_by_name(name)
+        if position != None:
+            debt_container = self.get_elements(MainPageLocators.debt_container)[position]
         debt_name = self.get_text(self.get_child_element(debt_container, MainPageLocators.debt_name))
         current_balance = self.get_text(self.get_child_element(debt_container, MainPageLocators.current_balance)).replace('$', '')
         debt_apr = self.get_text(self.get_child_element(debt_container, MainPageLocators.debt_apr)).replace('%', '')
