@@ -183,12 +183,55 @@ class MainPage(BasePage):
 
         assert(debt_name == name)
         assert(float(minimum_payment) == float(payment))
-        #if number_of_payments > 1:
+        month = ''
         if number_of_payments > 1:
             month = ' months'
         if number_of_payments == 1:
             month = ' month'
         assert(str(number_of_payments) + month == duration)
+        
+    def check_payoff_summary(self, current_balance, starting_balance, monthly_payment, first_month_interest, debt_free_on, number_of_payments, total_of_payments, total_interest, total_interest_percent):
+        current_balance_actual = self.get_text(self.get_element(MainPageLocators.payoff_current_balance)).replace('$', '')
+        starting_balance_actual = self.get_text(self.get_element(MainPageLocators.starting_balance)).replace('$', '')
+        monthly_payment_actual = self.get_text(self.get_element(MainPageLocators.monthly_payment)).replace('$', '')
+        first_month_interest_actual = self.get_text(self.get_element(MainPageLocators.first_month_interest)).replace('$', '')
+        debt_free_on_actual = self.get_text(self.get_element(MainPageLocators.debt_free_on))
+        total_of_payments_actual = self.get_text(self.get_element(MainPageLocators.total_of_payments)).replace('$', '')
+        total_interest_actual = self.get_text(self.get_element(MainPageLocators.total_interest)).replace('$', '')
+        total_interest_percent_actual = self.get_text(self.get_element(MainPageLocators.total_interest_percent)).replace('%', '').replace('(', '').replace(')', '')
+        
+        assert(float(current_balance) == float(current_balance_actual))
+        assert(float(starting_balance) == float(starting_balance_actual))
+        assert(float(monthly_payment) == float(monthly_payment_actual))
+        assert(float(first_month_interest) == float(first_month_interest_actual))
+        assert(debt_free_on in debt_free_on_actual)
+        date = common.get_datetime()
+        year = int(date.year + number_of_payments / 12 ) - date.year
+        month = number_of_payments % 12
+        debt_free_on = ''
+        if year > 0 and year < 1:
+            debt_free_on = str(year) + ' year'
+        if year > 1:
+            month = month - 1
+            debt_free_on = str(year) + ' years'
+        if year > 0:
+            debt_free_on = debt_free_on + ' '    
+        if month > 0 and month <= 1:
+            debt_free_on = debt_free_on + str(month) +  ' month'
+        if month > 1:
+            debt_free_on = debt_free_on + str(month) + ' months'
+        assert(debt_free_on in debt_free_on_actual)
+        assert(float(total_of_payments) == float(total_of_payments_actual))
+        assert(float(total_interest) == float(total_interest_actual))
+        assert(float(total_interest_percent) == float(total_interest_percent_actual))
+        
+    def get_total_interest(self, starting_balance, minimum_payment, number_of_payments, apr):
+        count = 0
+        total_interest = 0
+        while (count <= number_of_payments):
+            total_interest = total_interest + (starting_balance - minimum_payment * count + total_interest) * apr * 0.01 / 12
+            count = count + 1
+        return round(total_interest, 2)
         
     def logout(self):
         self.click(MainPageLocators.menu_active_account)

@@ -269,7 +269,7 @@ def test_validation_principal_calculator_total_payment(dpp):
 def test_payoff_plan_estimate(dpp):
     debt_name = "payoff plan estimate"
     starting_balance = randint(1001, 10000000)
-    number_of_payments = randint(1, 10)
+    number_of_payments = randint(2, 10)
     minimum_payment = math.ceil(starting_balance / number_of_payments) + 1
 
     base_page = page.BasePage(dpp)
@@ -277,7 +277,7 @@ def test_payoff_plan_estimate(dpp):
     main_page = page.MainPage(dpp)
     main_page.add_debt_parametrized(debt_name, starting_balance, minimum_payment, 0)
 
-    main_page.check_step_details(0, debt_name, minimum_payment, (number_of_payments-1))
+    main_page.check_step_details(0, debt_name, minimum_payment, (number_of_payments - 1))
     main_page.check_step_details(1, debt_name, starting_balance - minimum_payment * (number_of_payments - 1), 1)
 
 def test_debt_details(dpp):
@@ -359,4 +359,41 @@ def test_payoff_progress_add_50_payments(dpp):
     while current_payment < starting_balance:
         main_page.add_payment_ammount(minimum_payment)
         current_payment = current_payment + minimum_payment
-        main_page.check_payment_progress(starting_balance, current_payment)
+        main_page.check_payment_progress(starting_balance, current_payment)    
+    
+def test_payoff_summary(dpp):
+    debt_name = "payoff summary check"
+    starting_balance = randint(1001, 10000000)
+    number_of_payments = randint(2, 15)
+    minimum_payment = math.ceil(starting_balance / number_of_payments)
+    apr = randint(3, 15)
+    payoff_progress = 0
+
+    base_page = page.BasePage(dpp)
+    base_page.open_main_page_as_guest()
+    main_page = page.MainPage(dpp)
+    
+    main_page.add_debt_parametrized(debt_name, starting_balance, minimum_payment, apr)
+    total_interest = main_page.get_total_interest(starting_balance, minimum_payment, number_of_payments, apr)
+    
+    current_balance = starting_balance - payoff_progress
+    first_month_interest = round(current_balance * apr * 0.01 / 12, 2)
+    date = common.get_datetime()
+    debt_free_on = common.add_months(date, number_of_payments + 1).strftime('%b %Y')
+    total_of_payments = starting_balance + total_interest
+    total_interest_percent = round((total_interest / total_of_payments) * 100, 1)
+    main_page.check_payoff_summary(current_balance, starting_balance, minimum_payment, first_month_interest, debt_free_on, number_of_payments + 1, total_of_payments, total_interest, total_interest_percent)
+
+    #Add payment amount
+    main_page.add_payment_ammount(minimum_payment)
+    current_balance = starting_balance - minimum_payment
+    first_month_interest = round(current_balance * apr * 0.01 / 12, 2)
+    date = common.get_datetime()
+    debt_free_on = common.add_months(date, number_of_payments).strftime('%b %Y')
+    total_interest = main_page.get_total_interest(current_balance, minimum_payment, number_of_payments - 1, apr)
+    total_of_payments = current_balance + total_interest
+    total_interest_percent = round((total_interest / total_of_payments) * 100, 1)
+    main_page.check_payoff_summary(current_balance, starting_balance, minimum_payment, first_month_interest, debt_free_on, number_of_payments, total_of_payments, total_interest, total_interest_percent)
+
+#def test_p(dpp):
+    

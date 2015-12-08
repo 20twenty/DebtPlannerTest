@@ -82,6 +82,16 @@ class MainPageLocators(object):
 #    Strategy
     minimum_payment = (By.CSS_SELECTOR, '#minimum_payment')
 
+#    Payoff Summary
+    payoff_current_balance = (By.CSS_SELECTOR, '#total_balance')
+    starting_balance = (By.CSS_SELECTOR, '#starting_balance')
+    monthly_payment = (By.CSS_SELECTOR, '#payment_budget')
+    first_month_interest = (By.CSS_SELECTOR, '#first_month_interest')
+    debt_free_on = (By.CSS_SELECTOR, '#payments_duration')
+    total_of_payments = (By.CSS_SELECTOR, '#payments_total_paid')
+    total_interest = (By.CSS_SELECTOR, '#payments_total_interest')
+    total_interest_percent = (By.CSS_SELECTOR, '#payments_interest_percent')
+
 #    Payoff Plan
     debt_step = (By.CSS_SELECTOR, "#payment_plan_list div[id*='step']:not(.df_wrapper)")
     debt_free = (By.CSS_SELECTOR, "#payment_plan_list .df_wrapper")
