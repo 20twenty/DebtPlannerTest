@@ -202,10 +202,10 @@ class MainPage(BasePage):
         name = self.get_text(step_debt_name)
         payment = self.get_text(step_payment).replace('$', '')
         duration = self.get_text(step_duration)
+        duration_expected = common.get_month_debt_free(number_of_payments)
 
         assert(debt_name == name)
         assert(float(minimum_payment) == float(payment))
-        duration_expected = common.get_years_month_debt_free(number_of_payments)
         assert(duration_expected == duration)
         
     def check_step_debt_paid(self, step_number, debt):
@@ -239,7 +239,7 @@ class MainPage(BasePage):
         assert(debt_free_on in debt_free_on_actual)
         assert(float(total_of_payments) == float(total_of_payments_actual))
         assert(float(total_interest) == float(total_interest_actual))
-        assert(float(total_interest_percent) == float(total_interest_percent_actual))
+        assert(float(total_interest_percent) == float(total_interest_percent_actual))   
         
     def get_total_interest(self, starting_balance, minimum_payment, number_of_payments, apr):
         count = 0

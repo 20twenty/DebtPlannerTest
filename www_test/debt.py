@@ -10,16 +10,19 @@ class Debt:
         self.number_of_payments = number_of_payments
         self.apr = apr
         self.payoff_progress = apr
+        self.remainder = False
 
         if minimum_payment == None and number_of_payments != None:
             self.minimum_payment = math.ceil(starting_balance / number_of_payments)
             if starting_balance % number_of_payments != 0:
                 self.number_of_payments = number_of_payments + 1
+                self.remainder = True
         
         if number_of_payments == None and minimum_payment != None:
             self.number_of_payments = math.ceil(starting_balance / minimum_payment)
             if starting_balance % minimum_payment != 0:
                 self.number_of_payments = int(self.number_of_payments + 1)
+                self.remainder = True
             
         if apr == None:
             self.apr = 0

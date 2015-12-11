@@ -36,3 +36,10 @@ def get_years_month_debt_free(number_of_payments):
     if month > 1:
         debt_free_on = debt_free_on + str(month) + ' months'
     return debt_free_on    
+
+def get_month_debt_free(number_of_payments):
+    if number_of_payments == 1:
+        debt_free_on = str(number_of_payments) +  ' month'
+    if number_of_payments > 1:
+        debt_free_on = str(number_of_payments) + ' months'
+    return debt_free_on  
