@@ -124,7 +124,10 @@ class MainPage(BasePage):
         print "Compare amount expected %s and actual %s." % (amount, actual)
         assert(float(amount) == float(actual))
 
-    def check_debt_details(self, name, balance, apr, minimum, payoff_progress_percent, position = None):
+    def check_minimum_payment(self, minimum_payment):
+        assert(float(self.get_text(MainPageLocators.minimum_payment).replace('$','').replace(' +','')) == minimum_payment)
+
+    def check_debt_details(self, name, balance, minimum, apr, payoff_progress_percent, position = None):
         debt_container = self.get_debt_by_name(name)
         if position != None:
             debt_container = self.get_elements(MainPageLocators.debt_container)[position]
@@ -136,8 +139,8 @@ class MainPage(BasePage):
 
         assert(name == debt_name)
         assert(float(balance) == float(current_balance))
-        assert(float(debt_apr) == float(debt_apr))
-        assert(float(debt_minimum) == float(debt_minimum))
+        assert(float(apr) == float(debt_apr))
+        assert(float(minimum) == float(debt_minimum))
         assert(int(payoff_progress_percent) == int(debt_payoff_progress_percent))
 
     def get_debt_by_name(self, debt_name):
@@ -171,11 +174,30 @@ class MainPage(BasePage):
             debt_payoff_progress_bar_remaining = debt_payoff_progress_bar_remaining[start_position: end_position]
             assert(100 - int(current_payment) == int(debt_payoff_progress_bar_remaining))
 
+    def add_payment(self, amount):
+        self.click(MainPageLocators.planned_payment_button)
+        self.send_keys(MainPageLocators.popup_input, amount)
+        self.click(MainPageLocators.confirm_button)
+        
+    def set_payoff_order(self, order):
+#         self.click(MainPageLocators.payoff_order)
+        position = 0
+        order = order.lower()
+        if order == 'APR high to low'.lower():
+            position = 0
+        if order == 'Balance low to high'.lower():
+            position = 1
+        if order == 'As listed'.lower():
+            position = 2
+        self.get_elements(MainPageLocators.payoff_order)[position]
+
     def check_step_details(self, step_number, debt_name, minimum_payment, number_of_payments):
-        parent = self.get_elements(MainPageLocators.debt_step)[step_number]
-        step_debt_name = self.get_child_element(parent, MainPageLocators.step_debt_name)
-        step_payment = self.get_child_element(parent, MainPageLocators.step_payment)
-        step_duration = self.get_child_element(parent, MainPageLocators.step_duration)
+        payoff_plan_step = self.get_elements(MainPageLocators.payoff_plan_step)[step_number]
+        step_duration = self.get_child_element(payoff_plan_step, MainPageLocators.payoff_plan_step_duration)
+        payoff_plan_debts = self.get_child_elements(payoff_plan_step, MainPageLocators.payoff_plan_debt)
+        payoff_plan_debt = self.get_element_contains_text(payoff_plan_debts, debt_name)
+        step_debt_name = self.get_child_element(payoff_plan_debt, MainPageLocators.payoff_plan_debt_name)
+        step_payment = self.get_child_element(payoff_plan_debt, MainPageLocators.payoff_plan_payment)
 
         name = self.get_text(step_debt_name)
         payment = self.get_text(step_payment).replace('$', '')
@@ -183,12 +205,20 @@ class MainPage(BasePage):
 
         assert(debt_name == name)
         assert(float(minimum_payment) == float(payment))
-        month = ''
-        if number_of_payments > 1:
-            month = ' months'
-        if number_of_payments == 1:
-            month = ' month'
-        assert(str(number_of_payments) + month == duration)
+        duration_expected = common.get_years_month_debt_free(number_of_payments)
+        assert(duration_expected == duration)
+        
+    def check_step_debt_paid(self, step_number, debt):
+        parent = self.get_elements(MainPageLocators.debt_free)[step_number]
+        debt_free_name = self.get_child_element(parent, MainPageLocators.debt_free_name)
+        debt_free_duration = self.get_child_element(parent, MainPageLocators.debt_free_duration)
+
+        name = self.get_text(debt_free_name)
+        duration = self.get_text(debt_free_duration)
+
+        assert(debt.debt_name == name)
+        assert(debt.debt_free_on in duration)        
+        assert(debt.debt_free_years_month in duration)
         
     def check_payoff_summary(self, current_balance, starting_balance, monthly_payment, first_month_interest, debt_free_on, number_of_payments, total_of_payments, total_interest, total_interest_percent):
         current_balance_actual = self.get_text(self.get_element(MainPageLocators.payoff_current_balance)).replace('$', '')
@@ -205,21 +235,7 @@ class MainPage(BasePage):
         assert(float(monthly_payment) == float(monthly_payment_actual))
         assert(float(first_month_interest) == float(first_month_interest_actual))
         assert(debt_free_on in debt_free_on_actual)
-        date = common.get_datetime()
-        year = int(date.year + number_of_payments / 12 ) - date.year
-        month = number_of_payments % 12
-        debt_free_on = ''
-        if year > 0 and year < 1:
-            debt_free_on = str(year) + ' year'
-        if year > 1:
-            month = month - 1
-            debt_free_on = str(year) + ' years'
-        if year > 0:
-            debt_free_on = debt_free_on + ' '    
-        if month > 0 and month <= 1:
-            debt_free_on = debt_free_on + str(month) +  ' month'
-        if month > 1:
-            debt_free_on = debt_free_on + str(month) + ' months'
+        debt_free_on = common.get_years_month_debt_free(number_of_payments)
         assert(debt_free_on in debt_free_on_actual)
         assert(float(total_of_payments) == float(total_of_payments_actual))
         assert(float(total_interest) == float(total_interest_actual))

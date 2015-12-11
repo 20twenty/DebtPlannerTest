@@ -2,6 +2,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 from selenium.webdriver.remote.webelement import WebElement
+import types
 
 class BasePageElement(object):
     """Base page class that is initialized on every page object class."""
@@ -33,10 +34,23 @@ class BasePageElement(object):
                 lambda driver: parent.find_element(*child))
         return parent.find_element(*child)
 
+    def get_child_elements(self, parent, child):
+        """Returns elements of specified object"""
+        try:
+            WebDriverWait(self.dpp, 25).until(
+                lambda driver: parent.find_elements(*child))
+        finally:
+            WebDriverWait(self.dpp, 5).until(
+                lambda driver: parent.find_elements(*child))
+        return parent.find_elements(*child)
+
     def get_element_contains_text(self, element, text):
-        elements = self.get_elements(element)
+        if type(element) == types.ListType:
+            elements = element
+        else:
+            elements = self.get_elements(element)
         for element in elements:
-            if self.get_text(element) == str(text):
+            if str(text) in self.get_text(element):
                 return element
 
     def get_element(self, obj):

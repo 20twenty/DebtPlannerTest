@@ -14,8 +14,10 @@ class MainPageLocators(object):
     main_page = (By.CSS_SELECTOR, '#main_page')
     onboarding_div = (By.CSS_SELECTOR, '#onboarding_div')
     confirm_button = (By.CSS_SELECTOR, "[style*='display: block'] button.ui-button-text-only")
+    cancel_button = (By.CSS_SELECTOR, "[style*='display: block'] button.ui-button-text-only:nth-child(2)")
     popup_text = (By.CSS_SELECTOR, "[style*='display: block'] .ui-dialog-content")
     delete_confirm = (By.CSS_SELECTOR, "[aria-describedby='remove_debt_dialog']:not([style*=none]) button:nth-child(1)")
+    popup_input = (By.CSS_SELECTOR, ".ui-widget[style*='display: block'] input")
 
 #    Debt details
     add_button = (By.CSS_SELECTOR, '#add_button')
@@ -60,12 +62,6 @@ class MainPageLocators(object):
     delete = (By.CSS_SELECTOR, '#delete')
     other_options = (By.CSS_SELECTOR, '#other_options')
 
-#    Payoff Plan
-    debt_step = (By.CSS_SELECTOR, "#payment_plan_list div[id*='step']:not(.df_wrapper)")
-    debt_free = (By.CSS_SELECTOR, "#payment_plan_list .df_wrapper")
-    step_duration = (By.CSS_SELECTOR, ".step_duration")
-    step_payment = (By.CSS_SELECTOR, "#step_table tbody tr td:nth-of-type(2)")
-
     remove_made_payment_button = (By.CSS_SELECTOR, "#individual_made_payment_display #remove_made_payment_button_img")
     debt_payment_amount = (By.CSS_SELECTOR, '.add_debt_payment_amount')
     debt_payment_date = (By.CSS_SELECTOR, '.add_debt_payment_date.hasDatepicker')
@@ -81,6 +77,8 @@ class MainPageLocators(object):
 
 #    Strategy
     minimum_payment = (By.CSS_SELECTOR, '#minimum_payment')
+    planned_payment_button = (By.CSS_SELECTOR, '#planned_payment_button')
+    payoff_order = (By.CSS_SELECTOR, '#payoff_order')
 
 #    Payoff Summary
     payoff_current_balance = (By.CSS_SELECTOR, '#total_balance')
@@ -93,13 +91,17 @@ class MainPageLocators(object):
     total_interest_percent = (By.CSS_SELECTOR, '#payments_interest_percent')
 
 #    Payoff Plan
-    debt_step = (By.CSS_SELECTOR, "#payment_plan_list div[id*='step']:not(.df_wrapper)")
-    debt_free = (By.CSS_SELECTOR, "#payment_plan_list .df_wrapper")
-    step_number = (By.CSS_SELECTOR, ".step_number")
-    step_duration = (By.CSS_SELECTOR, ".step_duration")
-    step_debt_name = (By.CSS_SELECTOR, "#step_table tbody tr td:nth-of-type(1)")
-    step_payment = (By.CSS_SELECTOR, "#step_table tbody tr td:nth-of-type(2)")
+    payoff_plan_step = (By.CSS_SELECTOR, "#payment_plan_list div[id*='step']:not(.df_wrapper)")
+    payoff_plan_step_number = (By.CSS_SELECTOR, ".step_number")
+    payoff_plan_step_duration = (By.CSS_SELECTOR, ".step_duration")
+    payoff_plan_debt = (By.CSS_SELECTOR, "#step_table tbody tr")
+    payoff_plan_debt_name = (By.CSS_SELECTOR, "td:nth-of-type(1)")
+    payoff_plan_payment = (By.CSS_SELECTOR, "td:nth-of-type(2)")
 
+    debt_free = (By.CSS_SELECTOR, "#payment_plan_list .df_wrapper")
+    debt_free_name = (By.CSS_SELECTOR, "#df_name")
+    debt_free_duration = (By.CSS_SELECTOR, "#df_duration")
+    
 #    Account manage
     menu_active_account = (By.CSS_SELECTOR, '#menu_active_account')
     account_preferences = (By.CSS_SELECTOR, '#account_dialog #account_preferences')
