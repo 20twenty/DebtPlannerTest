@@ -15,7 +15,7 @@ class Debt:
         if minimum_payment == None and number_of_payments != None:
             self.minimum_payment = math.ceil(starting_balance / number_of_payments)
             if starting_balance % number_of_payments != 0:
-                self.number_of_payments = number_of_payments + 1
+                self.number_of_payments = int(number_of_payments + 1)
                 self.remainder = True
         
         if number_of_payments == None and minimum_payment != None:
@@ -26,6 +26,13 @@ class Debt:
             
         if apr == None:
             self.apr = 0
+            self.total_interest = 0
+        else:   
+            self.total_interest = common.get_total_interest(self.starting_balance, self.minimum_payment, self.number_of_payments, self.apr)
+            self.number_of_payments = math.floor((self.starting_balance + self.total_interest) / self.minimum_payment)
+            if (self.starting_balance + self.total_interest) % self.minimum_payment != 0:
+                self.number_of_payments = int(self.number_of_payments + 1)
+                self.remainder = True
 
         if payoff_progress == None:
             self.payoff_progress = 0

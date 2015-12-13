@@ -12,6 +12,7 @@ import mail
 import math
 import common
 import debt
+from functools import total_ordering
 
 # ---------------------------
 # ---- Tests start here -----
@@ -351,7 +352,7 @@ def test_payoff_summary(dpp):
     main_page = page.MainPage(dpp)
     
     main_page.add_debt_parametrized(debt_name, starting_balance, minimum_payment, apr)
-    total_interest = main_page.get_total_interest(starting_balance, minimum_payment, number_of_payments, apr)
+    total_interest = common.get_total_interest(starting_balance, minimum_payment, number_of_payments, apr)
     
     current_balance = starting_balance - payoff_progress
     first_month_interest = round(current_balance * apr * 0.01 / 12, 2)
@@ -367,28 +368,65 @@ def test_payoff_summary(dpp):
     first_month_interest = round(current_balance * apr * 0.01 / 12, 2)
     date = common.get_datetime()
     debt_free_on = common.add_months(date, number_of_payments).strftime('%b %Y')
-    total_interest = main_page.get_total_interest(current_balance, minimum_payment, number_of_payments - 1, apr)
+    total_interest = common.get_total_interest(current_balance, minimum_payment, number_of_payments - 1, apr)
     total_of_payments = current_balance + total_interest
     total_interest_percent = round((total_interest / total_of_payments) * 100, 1)
     main_page.check_payoff_summary(current_balance, starting_balance, minimum_payment, first_month_interest, debt_free_on, number_of_payments, total_of_payments, total_interest, total_interest_percent)
 
-# def test_sorting_of_debts(dpp):    
-#     debt_1 = debt.Debt("debt sorting check", randint(100001, 10000000), None, randint(6, 11), randint(7, 15))
-#     debt_2 = debt.Debt("debt sorting check second debt", randint(10, 1000), None, randint(1, 5), randint(2, 6))
-# 
-#     base_page = page.BasePage(dpp)
-#     base_page.open_main_page_as_guest()
-#     main_page = page.MainPage(dpp)
-#     main_page.add_debt_parametrized(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr)
-#     main_page.add_debt_parametrized(debt_2.debt_name, debt_2.starting_balance, debt_2.minimum_payment, debt_2.apr)
-# 
-#         
-#     
-#     main_page.check_step_details(0, debt_1.debt_name, debt_1.minimum_payment, (debt_1.number_of_payments - 1))
-#     main_page.check_step_details(1, debt_1.debt_name, debt_1.starting_balance - debt_1.minimum_payment * (debt_1.number_of_payments - 1), 1)
-#      
-#     main_page.check_step_debt_paid(0, debt_1.debt_name, debt_1.number_of_payments, debt_1.debt_free_on)
-#     main_page.check_step_debt_paid(1, debt_1.debt_name_1, debt_1.number_of_payments_1, debt_1.debt_free_on)
+def test_sorting_of_debts(dpp):
+    debt_1 = debt.Debt("sorting of debts 1", 200, 20, 20)
+    debt_2 = debt.Debt("sorting of debts 2", 300, 34, 30)
+    debt_3 = debt.Debt("sorting of debts 3", 100, 10, 10)
+ 
+    base_page = page.BasePage(dpp)
+    base_page.open_main_page_as_guest()
+    main_page = page.MainPage(dpp)
+    
+    main_page.add_debt_parametrized(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr)
+    main_page.add_debt_parametrized(debt_2.debt_name, debt_2.starting_balance, debt_2.minimum_payment, debt_2.apr)
+    main_page.add_debt_parametrized(debt_3.debt_name, debt_3.starting_balance, debt_3.minimum_payment, debt_3.apr)
+    
+    main_page.set_payoff_order('APR high to low')
+    main_page.check_step_details(0, debt_1.debt_name, debt_1.minimum_payment, (debt_1.number_of_payments - 2), 1)
+    main_page.check_step_details(0, debt_2.debt_name, debt_2.minimum_payment, (debt_1.number_of_payments - 2), 0)
+    main_page.check_step_details(0, debt_3.debt_name, debt_3.minimum_payment, (debt_1.number_of_payments - 2), 2)
+        
+    main_page.check_step_details(1, debt_1.debt_name, 20.60, 1, 1)
+    main_page.check_step_details(1, debt_2.debt_name, 3.19, 1, 0)
+    main_page.check_step_details(1, debt_3.debt_name, 4.86, 1, 2)
+    
+    debt_free = common.get_month_debt_free(11)
+    debt_free_years_month = common.get_years_month_debt_free(debt_1.number_of_payments - 1)
+         
+    main_page.check_step_debt_paid_payoff_plan(0, debt_2.debt_name, debt_free, debt_free_years_month)
+    main_page.check_step_debt_paid_payoff_plan(1, debt_1.debt_name, debt_free, debt_free_years_month)
+    main_page.check_step_debt_paid_payoff_plan(2, debt_3.debt_name, debt_free, debt_free_years_month)
+    
+    main_page.set_payoff_order('Balance low to high')
+    main_page.check_step_details(0, debt_1.debt_name, debt_1.minimum_payment, (debt_1.number_of_payments - 2), 1)
+    main_page.check_step_details(0, debt_2.debt_name, debt_2.minimum_payment, (debt_1.number_of_payments - 2), 2)
+    main_page.check_step_details(0, debt_3.debt_name, debt_3.minimum_payment, (debt_1.number_of_payments - 2), 0)
+    
+    main_page.check_step_details(1, debt_1.debt_name, 20.60, 1, 1)
+    main_page.check_step_details(1, debt_2.debt_name, 3.19, 1, 2)
+    main_page.check_step_details(1, debt_3.debt_name, 4.86, 1, 0)    
+    
+    main_page.check_step_debt_paid_payoff_plan(2, debt_2.debt_name, debt_free, debt_free_years_month)
+    main_page.check_step_debt_paid_payoff_plan(1, debt_1.debt_name, debt_free, debt_free_years_month)
+    main_page.check_step_debt_paid_payoff_plan(0, debt_3.debt_name, debt_free, debt_free_years_month)
+    
+    main_page.set_payoff_order('As listed')
+    main_page.check_step_details(0, debt_1.debt_name, debt_1.minimum_payment, (debt_1.number_of_payments - 2), 0)
+    main_page.check_step_details(0, debt_2.debt_name, debt_2.minimum_payment, (debt_1.number_of_payments - 2), 1)
+    main_page.check_step_details(0, debt_3.debt_name, debt_3.minimum_payment, (debt_1.number_of_payments - 2), 2)
+    
+    main_page.check_step_details(1, debt_1.debt_name, 20.60, 1, 0)
+    main_page.check_step_details(1, debt_2.debt_name, 3.19, 1, 1)
+    main_page.check_step_details(1, debt_3.debt_name, 4.86, 1, 2)
+    
+    main_page.check_step_debt_paid_payoff_plan(1, debt_2.debt_name, debt_free, debt_free_years_month)
+    main_page.check_step_debt_paid_payoff_plan(0, debt_1.debt_name, debt_free, debt_free_years_month)
+    main_page.check_step_debt_paid_payoff_plan(2, debt_3.debt_name, debt_free, debt_free_years_month)
     
 def test_payoff_plan_one_month(dpp):
     debt_1 = debt.Debt("payoff_one_month", randint(1001, 10000000), None, 0, 1)
@@ -415,7 +453,7 @@ def test_payoff_plan_estimate(dpp):
     main_page.check_step_debt_paid(0, debt_1)
     
 def test_payoff_plan_two_debts(dpp):    
-    debt_1 = debt.Debt("debt payoff plan check", randint(10, 1000), None, None, randint(3, 6))
+    debt_1 = debt.Debt("debt payoff plan check first debt", randint(10, 1000), None, None, randint(3, 6))
     debt_2 = debt.Debt("debt payoff plan check second debt", randint(100001, 10000000), None, None, randint(9, 15))
  
     base_page = page.BasePage(dpp)
@@ -423,48 +461,11 @@ def test_payoff_plan_two_debts(dpp):
     main_page = page.MainPage(dpp)
     main_page.add_debt_parametrized(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr)
     main_page.add_debt_parametrized(debt_2.debt_name, debt_2.starting_balance, debt_2.minimum_payment, debt_2.apr)
-     
-    #Check first step of payment
-    debt_1_payment = debt_1.minimum_payment
-    debt_2_payment = debt_2.minimum_payment
-    step_number = 0
-    if debt_1.remainder:
-        step_number = 1
-        main_page.check_step_details(0, debt_1.debt_name, debt_1.minimum_payment, (debt_1.number_of_payments - 1))
-        main_page.check_step_details(0, debt_2.debt_name, debt_2.minimum_payment, (debt_1.number_of_payments - 1))
-    
-        #Check the last step of the first payment
-        debt_1_payment = debt_1.starting_balance - debt_1.minimum_payment * (debt_1.number_of_payments - 1)
-        debt_2_payment = debt_2.minimum_payment + debt_1.minimum_payment - debt_1_payment
-            
-        main_page.check_step_details(1, debt_1.debt_name, debt_1_payment, 1)
-        if debt_2.remainder:
-            main_page.check_step_details(1, debt_2.debt_name, debt_2_payment, 1)
-    else:
-        main_page.check_step_details(0, debt_1.debt_name, debt_1_payment, debt_1.number_of_payments)
-        main_page.check_step_details(0, debt_2.debt_name, debt_2_payment, debt_1.number_of_payments)
-    
-    main_page.check_step_debt_paid(0, debt_1)
-    
-    #Check first step of the second debt after payoff of the first debt
-    minimum_payment = debt_2.minimum_payment + debt_1.minimum_payment
-    left_to_pay = debt_2.starting_balance - (debt_2.minimum_payment * debt_1.number_of_payments + debt_1.minimum_payment - debt_1_payment)
-    left_duration = int(left_to_pay / minimum_payment)
-    
-    if left_to_pay <= minimum_payment:
-        main_page.check_step_details(step_number + 1, debt_2.debt_name, left_to_pay, 1)
-    if left_duration > 1:
-        main_page.check_step_details(step_number + 1, debt_2.debt_name, minimum_payment, left_duration)
-        last_payment = left_to_pay - minimum_payment * left_duration
-        main_page.check_step_details(step_number + 2, debt_2.debt_name, last_payment, 1)
-            
-    debt_2.debt_free_on = common.add_months(common.get_datetime(), debt_1.number_of_payments + left_duration + 1).strftime('%b %Y')
-    debt_2.debt_free_years_month = common.get_years_month_debt_free(debt_1.number_of_payments + left_duration + 1)
-    main_page.check_step_debt_paid(1, debt_2)
+    main_page.check_payoff(debt_1, debt_2)
     
 def test_payoff_plan_two_debts_ending_same_month(dpp):
     number_of_payments = randint(3, 15)
-    debt_1 = debt.Debt("debt payoff plan end same month check", randint(10, 1000), None, None, number_of_payments)
+    debt_1 = debt.Debt("debt payoff plan end same month check first debt", randint(10, 1000), None, None, number_of_payments)
     debt_2 = debt.Debt("debt payoff plan end same month check second debt", randint(100001, 10000000), None, None, number_of_payments)
  
     base_page = page.BasePage(dpp)
@@ -490,6 +491,7 @@ def test_payoff_plan_two_debts_ending_same_month(dpp):
     else:
         main_page.check_step_details(0, debt_1.debt_name, debt_1_payment, debt_1.number_of_payments)
         main_page.check_step_details(0, debt_2.debt_name, debt_2_payment, debt_2.number_of_payments)
-    
+
+    main_page.set_payoff_order('As listed')    
     main_page.check_step_debt_paid(0, debt_1)
     main_page.check_step_debt_paid(1, debt_2)

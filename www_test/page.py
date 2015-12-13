@@ -189,13 +189,17 @@ class MainPage(BasePage):
             position = 1
         if order == 'As listed'.lower():
             position = 2
-        self.get_elements(MainPageLocators.payoff_order)[position]
+        element = self.get_elements(MainPageLocators.payoff_order)[position]
+        self.click(element)
 
-    def check_step_details(self, step_number, debt_name, minimum_payment, number_of_payments):
+    def check_step_details(self, step_number, debt_name, minimum_payment, number_of_payments, index = None):
         payoff_plan_step = self.get_elements(MainPageLocators.payoff_plan_step)[step_number]
         step_duration = self.get_child_element(payoff_plan_step, MainPageLocators.payoff_plan_step_duration)
         payoff_plan_debts = self.get_child_elements(payoff_plan_step, MainPageLocators.payoff_plan_debt)
-        payoff_plan_debt = self.get_element_contains_text(payoff_plan_debts, debt_name)
+        if index == None:
+            payoff_plan_debt = self.get_element_contains_text(payoff_plan_debts, debt_name)
+        else:
+            payoff_plan_debt = payoff_plan_debts[index]
         step_debt_name = self.get_child_element(payoff_plan_debt, MainPageLocators.payoff_plan_debt_name)
         step_payment = self.get_child_element(payoff_plan_debt, MainPageLocators.payoff_plan_payment)
 
@@ -207,8 +211,11 @@ class MainPage(BasePage):
         assert(debt_name == name)
         assert(float(minimum_payment) == float(payment))
         assert(duration_expected == duration)
-        
+    
     def check_step_debt_paid(self, step_number, debt):
+        self.check_step_debt_paid_payoff_plan(step_number, debt.debt_name, debt.debt_free_on, debt.debt_free_years_month) 
+        
+    def check_step_debt_paid_payoff_plan(self, step_number, debt_name, debt_free_on, debt_free_years_month):
         parent = self.get_elements(MainPageLocators.debt_free)[step_number]
         debt_free_name = self.get_child_element(parent, MainPageLocators.debt_free_name)
         debt_free_duration = self.get_child_element(parent, MainPageLocators.debt_free_duration)
@@ -216,9 +223,9 @@ class MainPage(BasePage):
         name = self.get_text(debt_free_name)
         duration = self.get_text(debt_free_duration)
 
-        assert(debt.debt_name == name)
-        assert(debt.debt_free_on in duration)        
-        assert(debt.debt_free_years_month in duration)
+        assert(debt_name == name)
+        assert(debt_free_on in duration)        
+        assert(debt_free_years_month in duration)
         
     def check_payoff_summary(self, current_balance, starting_balance, monthly_payment, first_month_interest, debt_free_on, number_of_payments, total_of_payments, total_interest, total_interest_percent):
         current_balance_actual = self.get_text(self.get_element(MainPageLocators.payoff_current_balance)).replace('$', '')
@@ -241,13 +248,46 @@ class MainPage(BasePage):
         assert(float(total_interest) == float(total_interest_actual))
         assert(float(total_interest_percent) == float(total_interest_percent_actual))   
         
-    def get_total_interest(self, starting_balance, minimum_payment, number_of_payments, apr):
-        count = 0
-        total_interest = 0
-        while (count <= number_of_payments):
-            total_interest = total_interest + (starting_balance - minimum_payment * count + total_interest) * apr * 0.01 / 12
-            count = count + 1
-        return round(total_interest, 2)
+    def check_payoff(self, debt_1, debt_2):
+        #Check first step of payment
+        debt_1_payment = debt_1.minimum_payment
+        debt_2_payment = debt_2.minimum_payment
+        
+        step_number = 0
+        if debt_1.remainder:
+            step_number = 1
+            self.check_step_details(0, debt_1.debt_name, debt_1.minimum_payment, (debt_1.number_of_payments - 1))
+            self.check_step_details(0, debt_2.debt_name, debt_2.minimum_payment, (debt_1.number_of_payments - 1))
+        
+            #Check the last step of the first payment
+            debt_1_payment = debt_1.starting_balance - debt_1.minimum_payment * (debt_1.number_of_payments - 1)
+            debt_2_payment = debt_2.minimum_payment + debt_1.minimum_payment - debt_1_payment
+                
+            self.check_step_details(1, debt_1.debt_name, debt_1_payment, 1)
+            if debt_2.remainder:
+                self.check_step_details(1, debt_2.debt_name, debt_2_payment, 1)
+        else:
+            self.check_step_details(0, debt_1.debt_name, debt_1_payment, debt_1.number_of_payments)
+            self.check_step_details(0, debt_2.debt_name, debt_2_payment, debt_1.number_of_payments)
+        
+        self.check_step_debt_paid(0, debt_1)
+        
+        if debt_1.number_of_payments != debt_2.number_of_payments:
+            #Check first step of the second debt after payoff of the first debt
+            minimum_payment = debt_2.minimum_payment + debt_1.minimum_payment
+            left_to_pay = debt_2.starting_balance - (debt_2.minimum_payment * debt_1.number_of_payments + debt_1.minimum_payment - debt_1_payment)
+            left_duration = int(left_to_pay / minimum_payment)
+            
+            if left_to_pay <= minimum_payment:
+                self.check_step_details(step_number + 1, debt_2.debt_name, left_to_pay, 1)
+            if left_duration > 1:
+                self.check_step_details(step_number + 1, debt_2.debt_name, minimum_payment, left_duration)
+                last_payment = left_to_pay - minimum_payment * left_duration
+                self.check_step_details(step_number + 2, debt_2.debt_name, last_payment, 1)
+                    
+            debt_2.debt_free_on = common.add_months(common.get_datetime(), debt_1.number_of_payments + left_duration + 1).strftime('%b %Y')
+            debt_2.debt_free_years_month = common.get_years_month_debt_free(debt_1.number_of_payments + left_duration + 1)
+        self.check_step_debt_paid(1, debt_2)    
         
     def logout(self):
         self.click(MainPageLocators.menu_active_account)

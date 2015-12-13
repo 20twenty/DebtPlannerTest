@@ -78,7 +78,7 @@ class MainPageLocators(object):
 #    Strategy
     minimum_payment = (By.CSS_SELECTOR, '#minimum_payment')
     planned_payment_button = (By.CSS_SELECTOR, '#planned_payment_button')
-    payoff_order = (By.CSS_SELECTOR, '#payoff_order')
+    payoff_order = (By.CSS_SELECTOR, '#payoff_order option')
 
 #    Payoff Summary
     payoff_current_balance = (By.CSS_SELECTOR, '#total_balance')

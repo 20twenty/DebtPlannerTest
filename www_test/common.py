@@ -15,16 +15,16 @@ def get_datetime():
 def add_months(date, months):
     month = date.month - 1 + months
     year = int(date.year + month / 12 )
-    month = month % 12 + 1
+    month = int(month % 12 + 1)
     #day = min(date.day, calendar.monthrange(year, month)[1])
     return datetime.date(year, month, date.day)
 
 def get_years_month_debt_free(number_of_payments):
     date = get_datetime()
     year = int(date.year + number_of_payments / 12 ) - date.year
-    month = number_of_payments % 12
+    month = int(number_of_payments % 12)
     debt_free_on = ''
-    if year > 0 and year < 1:
+    if year > 0 and year <= 1:
         debt_free_on = str(year) + ' year'
     if year > 1:
         month = month - 1
@@ -39,7 +39,15 @@ def get_years_month_debt_free(number_of_payments):
 
 def get_month_debt_free(number_of_payments):
     if number_of_payments == 1:
-        debt_free_on = str(number_of_payments) +  ' month'
+        debt_free_on = str(int(number_of_payments)) +  ' month'
     if number_of_payments > 1:
-        debt_free_on = str(number_of_payments) + ' months'
+        debt_free_on = str(int(number_of_payments)) + ' months'
     return debt_free_on  
+
+def get_total_interest(starting_balance, minimum_payment, number_of_payments, apr):
+    count = 0
+    total_interest = 0
+    while (count <= number_of_payments):
+        total_interest = total_interest + (starting_balance - minimum_payment * count + total_interest) * apr * 0.01 / 12
+        count = count + 1
+    return round(total_interest, 2)
