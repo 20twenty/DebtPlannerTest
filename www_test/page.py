@@ -22,6 +22,7 @@ class BasePage(BasePageElement):
         assert(self.is_displayed(BasePageLocators.get_started_page))
         self.dpp.find_element(*BasePageLocators.get_started_now).click()
         assert(self.is_displayed(MainPageLocators.main_page))
+        return MainPage(self.dpp)
 
     def open_create_account_page(self):
         assert(self.is_displayed(BasePageLocators.get_started_page))

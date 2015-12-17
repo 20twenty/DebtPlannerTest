@@ -45,8 +45,7 @@ def test_create_demo_account(dpp):
 
 def test_guest(dpp):
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     main_page.main_function()
     dpp.refresh();
     assert(main_page.is_displayed(MainPageLocators.main_page))
@@ -80,8 +79,7 @@ def test_page_nav(dpp):
 
 def test_add_principal_payment(dpp):
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     main_page.add_debt()
     main_page.add_payment_ammount(20, common.get_datetime())
     main_page.check_payment_ammount(20)
@@ -113,8 +111,7 @@ def test_account_create(dpp):
 
 def test_delete_debt(dpp):
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     main_page.add_debt()
     assert(base_page.is_displayed(MainPageLocators.debt_name))
     main_page.delete_debt()
@@ -126,8 +123,7 @@ def test_title(dpp):
 def test_debt_dialog_validation_debt_name(dpp):
     error_message = "\"Name\" cannot be blank. Please fill in this field before continuing"
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     main_page.click(MainPageLocators.add_button)
     main_page.validation_check(MainPageLocators.debt_name_edit, MainPageLocators.save_button, "", error_message)
 
@@ -135,8 +131,7 @@ def test_debt_dialog_validation_debt_balance(dpp):
     error_message = "\"Balance\" is out of range: 0<=Balance<=10000000"
     error_message_1 = "\"Minimum payment\" is not a valid number."
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     main_page.click(MainPageLocators.add_button)
     main_page.send_keys(MainPageLocators.debt_name_edit, "Name")
     main_page.validation_check(MainPageLocators.debt_balance_edit, MainPageLocators.save_button, "-1", error_message)
@@ -150,8 +145,7 @@ def test_debt_dialog_validation_minimum_payment(dpp):
     error_message = "\"Minimum payment\" is out of range: 0<=Minimum payment<=10000000"
     error_message_1 = "\"APR\" is not a valid number."
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     main_page.click(MainPageLocators.add_button)
     main_page.send_keys(MainPageLocators.debt_name_edit, "Name")
     main_page.send_keys(MainPageLocators.debt_balance_edit, randint(1, 10000000))
@@ -165,8 +159,7 @@ def test_debt_dialog_validation_minimum_payment(dpp):
 def test_debt_dialog_validation_apr(dpp):
     error_message = "\"APR\" is out of range: 0<=APR<=99"
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     main_page.click(MainPageLocators.add_button)
     main_page.send_keys(MainPageLocators.debt_name_edit, "Name")
     main_page.send_keys(MainPageLocators.debt_balance_edit, randint(1, 10000000))
@@ -184,8 +177,7 @@ def test_debt_dialog_validation_apr(dpp):
 def test_debt_dialog_validation_promo_apr(dpp):
     error_message = "\"Promo APR\" is out of range: 0<=Promo APR<=99"
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     main_page.click(MainPageLocators.add_button)
     main_page.send_keys(MainPageLocators.debt_name_edit, "Name")
     main_page.send_keys(MainPageLocators.debt_balance_edit, randint(1, 10000000))
@@ -206,8 +198,7 @@ def test_validation_principal_payment(dpp):
     payment = 10000000
     error_message = "\"Made Payment Amount\" is out of range: -10000000<=Made Payment Amount<=1000000000"
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     main_page.add_debt_parametrized("name", payment, randint(1, 10000000), randint(1, 99))
     main_page.add_payment_ammount(-10000000)
     main_page.remove_payment_ammount()
@@ -234,8 +225,7 @@ def test_validation_principal_payment(dpp):
 def test_validation_principal_calculator_total_payment(dpp):
     payment = 10000000
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     main_page.add_debt_parametrized("name", randint(1, 10000000), randint(1, 10000000), randint(1, 99))
     main_page.click(MainPageLocators.edit_debt)
     main_page.click(MainPageLocators.principal_payment_calculator)
@@ -272,8 +262,7 @@ def test_debt_details(dpp):
     debt_1 = debt.Debt("payoff details check", randint(1001, 10000000), None, randint(1, 99), randint(2, 10))
 
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     main_page.add_debt_parametrized(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr)
     main_page.check_debt_details(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr, debt_1.payoff_progress)
 
@@ -295,49 +284,36 @@ def test_debt_details(dpp):
     main_page.check_debt_details(debt_3.debt_name, debt_3.starting_balance, debt_3.minimum_payment, debt_3.apr, debt_3.payoff_progress)
 
 def test_ordering_of_debts(dpp):
-    debt_name = "debt ordering check"
-    starting_balance = randint(100001, 10000000)
-    number_of_payments = randint(2, 15)
-    minimum_payment = math.ceil(starting_balance / number_of_payments)
-    apr = randint(51, 99)
-    payoff_progress = 0
+    debt_1 = debt.Debt("debt ordering check", randint(100001, 10000000), None, randint(51, 99), randint(2, 15))
 
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
-    main_page.add_debt_parametrized(debt_name, starting_balance, minimum_payment, apr)
-    main_page.check_debt_details(debt_name, starting_balance, minimum_payment, apr, payoff_progress, 0)
-    main_page.check_minimum_payment(minimum_payment)
+    main_page = base_page.open_main_page_as_guest()
+    main_page.add_debt_parametrized(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr)
+    main_page.check_debt_details(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr, debt_1.payoff_progress, 0)
+    main_page.check_minimum_payment(debt_1.minimum_payment)
     
-    debt_name_1 = "debt ordering check second loan"
-    starting_balance_1 = randint(10, 1000)
-    number_of_payments = randint(2, 10)
-    minimum_payment_1 = math.ceil(starting_balance / number_of_payments)
-    apr_1 = randint(1, 50)
-    payoff_progress_1 = 0
-    main_page.add_debt_parametrized(debt_name_1, starting_balance_1, minimum_payment_1, apr_1)
-    main_page.check_debt_details(debt_name_1, starting_balance_1, minimum_payment_1, apr_1, payoff_progress_1, 1)
-    main_page.check_minimum_payment(minimum_payment + minimum_payment_1)
+    debt_2 = debt.Debt("debt ordering check second loan", randint(10, 1000), None, randint(1, 50), randint(2, 10))
+    main_page.add_debt_parametrized(debt_2.debt_name, debt_2.starting_balance, debt_2.minimum_payment, debt_2.apr)
+    main_page.check_debt_details(debt_2.debt_name, debt_2.starting_balance, debt_2.minimum_payment, debt_2.apr, debt_2.payoff_progress, 1)
+    main_page.check_minimum_payment(debt_1.minimum_payment + debt_2.minimum_payment)
 
     #edit position of a debt
-    main_page.edit_debt(debt_name, None, None, None, None, 1)
-    main_page.check_debt_details(debt_name, starting_balance, minimum_payment, apr, payoff_progress, 1)
-    main_page.check_debt_details(debt_name_1, starting_balance_1, minimum_payment_1, apr_1, payoff_progress_1, 0)
-    main_page.check_minimum_payment(minimum_payment + minimum_payment_1)
+    main_page.edit_debt(debt_1.debt_name, None, None, None, None, 1)
+    main_page.check_debt_details(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr, debt_1.payoff_progress, 1)
+    main_page.check_debt_details(debt_2.debt_name, debt_2.starting_balance, debt_2.minimum_payment, debt_2.apr, debt_2.payoff_progress, 0)
+    main_page.check_minimum_payment(debt_1.minimum_payment + debt_2.minimum_payment)
 
 def test_payoff_progress_add_50_payments(dpp):
-    starting_balance = 100
-    minimum_payment = 2
+    debt_1 = debt.Debt("progress test 50 principal payments", 100, 2)
 
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
-    main_page.add_debt_parametrized("progress test 50 principal payments", starting_balance, minimum_payment, 0)
+    main_page = base_page.open_main_page_as_guest()
+    main_page.add_debt_parametrized(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, 0)
     current_payment = 0
-    while current_payment < starting_balance:
-        main_page.add_payment_ammount(minimum_payment)
-        current_payment = current_payment + minimum_payment
-        main_page.check_payment_progress(starting_balance, current_payment)    
+    while current_payment < debt_1.starting_balance:
+        main_page.add_payment_ammount(debt_1.minimum_payment)
+        current_payment = current_payment + debt_1.minimum_payment
+        main_page.check_payment_progress(debt_1.starting_balance, current_payment)    
     
 def test_payoff_summary(dpp):
     debt_name = "payoff summary check"
@@ -348,8 +324,7 @@ def test_payoff_summary(dpp):
     payoff_progress = 0
 
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     
     main_page.add_debt_parametrized(debt_name, starting_balance, minimum_payment, apr)
     total_interest = common.get_total_interest(starting_balance, minimum_payment, number_of_payments, apr)
@@ -379,8 +354,7 @@ def test_sorting_of_debts(dpp):
     debt_3 = debt.Debt("sorting of debts 3", 100, 10, 10)
  
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     
     main_page.add_debt_parametrized(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr)
     main_page.add_debt_parametrized(debt_2.debt_name, debt_2.starting_balance, debt_2.minimum_payment, debt_2.apr)
@@ -432,8 +406,7 @@ def test_payoff_plan_one_month(dpp):
     debt_1 = debt.Debt("payoff_one_month", randint(1001, 10000000), None, 0, 1)
 
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     main_page.add_debt_parametrized(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr)
     main_page.check_step_details(0, debt_1.debt_name, debt_1.minimum_payment, (debt_1.number_of_payments))
     main_page.check_step_debt_paid(0, debt_1)
@@ -442,8 +415,7 @@ def test_payoff_plan_estimate(dpp):
     debt_1 = debt.Debt("payoff plan estimate", randint(1001, 10000000), None, 0, randint(2, 10))
 
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     main_page.add_debt_parametrized(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr)
     if debt_1.remainder:
         main_page.check_step_details(0, debt_1.debt_name, debt_1.minimum_payment, debt_1.number_of_payments - 1)
@@ -457,8 +429,7 @@ def test_payoff_plan_two_debts(dpp):
     debt_2 = debt.Debt("debt payoff plan check second debt", randint(100001, 10000000), None, None, randint(9, 15))
  
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     main_page.add_debt_parametrized(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr)
     main_page.add_debt_parametrized(debt_2.debt_name, debt_2.starting_balance, debt_2.minimum_payment, debt_2.apr)
     main_page.check_payoff(debt_1, debt_2)
@@ -469,8 +440,7 @@ def test_payoff_plan_two_debts_ending_same_month(dpp):
     debt_2 = debt.Debt("debt payoff plan end same month check second debt", randint(100001, 10000000), None, None, number_of_payments)
  
     base_page = page.BasePage(dpp)
-    base_page.open_main_page_as_guest()
-    main_page = page.MainPage(dpp)
+    main_page = base_page.open_main_page_as_guest()
     main_page.add_debt_parametrized(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr)
     main_page.add_debt_parametrized(debt_2.debt_name, debt_2.starting_balance, debt_2.minimum_payment, debt_2.apr)
      
