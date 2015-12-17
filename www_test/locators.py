@@ -111,12 +111,12 @@ class MainPageLocators(object):
 #     Chart Debt Categories
     chart_categories_panel = (By.CSS_SELECTOR, "#chart_categories_panel")
     categories = (By.CSS_SELECTOR, "#category_legend td:nth-of-type(2)")
-    canvas = (By.CSS_SELECTOR, "#debt_category_chart")
+    debt_category_chart = (By.CSS_SELECTOR, "#debt_category_chart")
 
 #     Chart Debts
     chart_debts_panel = (By.CSS_SELECTOR, "#chart_debts_panel")
     categories = (By.CSS_SELECTOR, "#debts_legend td:nth-of-type(2)")
-    canvas = (By.CSS_SELECTOR, "#debt_name_chart")
+    debt_name_chart = (By.CSS_SELECTOR, "#debt_name_chart")
     
 #    Account manage
     menu_active_account = (By.CSS_SELECTOR, '#menu_active_account')

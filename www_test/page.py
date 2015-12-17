@@ -6,9 +6,6 @@ from locators import LoginPageLocators
 from locators import MainPageLocators
 from locators import CreateAccountPageLocators
 import common
-# from datetime import date
-# from calendar import calendar
-# import datetime
 
 class BasePage(BasePageElement):
     """Base class to initialize the base page that will be called from all pages"""
