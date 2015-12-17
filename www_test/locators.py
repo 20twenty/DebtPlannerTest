@@ -23,6 +23,9 @@ class MainPageLocators(object):
     add_button = (By.CSS_SELECTOR, '#add_button')
     debt_display = (By.CSS_SELECTOR, "#account_dialog #delete_account_button")
     debt_container = (By.CSS_SELECTOR, "#debt_container > div")
+    chart_button  = (By.CSS_SELECTOR, "#chart_button_img")
+    edit_button  = (By.CSS_SELECTOR, "#edit_button_img")
+    remove_button  = (By.CSS_SELECTOR, "#remove_button_img")
     edit_debt = (By.CSS_SELECTOR, '.debt_wrapper > div:nth-child(2)')
     debt_name = (By.CSS_SELECTOR, '.debt_name')
     current_balance = (By.CSS_SELECTOR, '.debt_balance')
@@ -33,13 +36,16 @@ class MainPageLocators(object):
     debt_payoff_progress_bar_remaining = (By.CSS_SELECTOR, '.debt_payoff_progress_bar_remaining[style]')
 
 #    Edit Debt dialog
+    debt_position_select = (By.CSS_SELECTOR, '#position_div[style] > #debt_position_select > option')
     save_button = (By.CSS_SELECTOR, '#debt_dialog #save_button')
     debt_details = (By.CSS_SELECTOR, "#debt_dialog #debt_details")
     debt_name_edit = (By.CSS_SELECTOR, '#debt_name[placeholder]')
     debt_balance_edit = (By.CSS_SELECTOR, '#debt_balance[placeholder]')
     debt_minimum_edit = (By.CSS_SELECTOR, '#debt_minimum[placeholder]')
     debt_apr_edit = (By.CSS_SELECTOR, '#debt_apr[placeholder]')
-    debt_position_select = (By.CSS_SELECTOR, '#position_div[style] > #debt_position_select > option')
+    debt_category = (By.CSS_SELECTOR, '#debt_dialog #debt_category')
+    debt_payment_due_date = (By.CSS_SELECTOR, '#debt_dialog #debt_payment_due_date')
+    
     use_example = (By.CSS_SELECTOR, '#debt_dialog #use_example')
     has_promo = (By.CSS_SELECTOR, '#has_promo')
     #date
@@ -101,6 +107,16 @@ class MainPageLocators(object):
     debt_free = (By.CSS_SELECTOR, "#payment_plan_list .df_wrapper")
     debt_free_name = (By.CSS_SELECTOR, "#df_name")
     debt_free_duration = (By.CSS_SELECTOR, "#df_duration")
+    
+#     Chart Debt Categories
+    chart_categories_panel = (By.CSS_SELECTOR, "#chart_categories_panel")
+    categories = (By.CSS_SELECTOR, "#category_legend td:nth-of-type(2)")
+    canvas = (By.CSS_SELECTOR, "#debt_category_chart")
+
+#     Chart Debts
+    chart_debts_panel = (By.CSS_SELECTOR, "#chart_debts_panel")
+    categories = (By.CSS_SELECTOR, "#debts_legend td:nth-of-type(2)")
+    canvas = (By.CSS_SELECTOR, "#debt_name_chart")
     
 #    Account manage
     menu_active_account = (By.CSS_SELECTOR, '#menu_active_account')
