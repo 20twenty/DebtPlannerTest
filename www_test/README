@@ -7,6 +7,7 @@ sudo pip install selenium
 sudo pip install pytest
 sudo pip install pytest-xdist
 sudo pip install pytest-html
+sudo pip install pil
 
 Then run as:
    py.test

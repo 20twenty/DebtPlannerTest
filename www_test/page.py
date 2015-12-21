@@ -5,7 +5,10 @@ from locators import BasePageLocators
 from locators import LoginPageLocators
 from locators import MainPageLocators
 from locators import CreateAccountPageLocators
+import time
+import os
 import common
+from PIL import Image
 
 class BasePage(BasePageElement):
     """Base class to initialize the base page that will be called from all pages"""
@@ -40,6 +43,9 @@ class LoginPage(BasePage):
 class MainPage(BasePage):
     """Home page action methods come here."""
 
+#     def get_canvas_context(self):
+#         $("#debt_category_chart")[0].getContext('2d');
+
     def main_function(self):
         self.add_debt()
         self.add_debt()
@@ -63,12 +69,16 @@ class MainPage(BasePage):
         #set day
         self.click(self.get_element_contains_text(MainPageLocators.date, date.day))
 
-    def add_debt_parametrized(self, name, balance, minimum, apr):
+    def add_debt_parametrized(self, name, balance, minimum, apr, category = None, payment_due_date = None):
         self.click(MainPageLocators.add_button)
         self.send_keys(MainPageLocators.debt_name_edit, name)
         self.send_keys(MainPageLocators.debt_balance_edit, str(balance))
         self.send_keys(MainPageLocators.debt_minimum_edit, str(minimum))
         self.send_keys(MainPageLocators.debt_apr_edit, str(apr))
+        if category != None:
+            self.select_option(MainPageLocators.debt_category, category)
+        if payment_due_date != None:
+            self.select_option(MainPageLocators.debt_payment_due_date, payment_due_date)
         self.click(MainPageLocators.save_button)
         WebDriverWait(self.dpp, 2).until(EC.element_to_be_clickable(MainPageLocators.main_page))
 
@@ -316,8 +326,33 @@ class MainPage(BasePage):
             assert(actual == error_message)
             self.click(MainPageLocators.confirm_button)
 
-    def validate_debt_field(self, field, value):
-        self.send_keys(field, str(value))
+    def validate_debt_field(self, obj, value):
+        self.send_keys(obj, str(value))
         self.click(MainPageLocators.save_button)
         self.click(MainPageLocators.edit_debt)
         self.click(MainPageLocators.debt_details)
+
+    def verify_canvas(self, obj, file_expected, reverse = None):
+        file_expected = os.path.dirname(os.path.realpath(__file__)) + os.sep + "files" + os.sep + file_expected
+        file_path_folder = os.path.dirname(os.path.realpath(__file__)) + os.sep + "temp" + os.sep
+        file_path = file_path_folder + str(int(time.time()*100.00)) + ".png"
+        self.dpp.save_screenshot(file_path)
+        canvas = self.get_element(obj)
+        height = canvas.rect['height']
+        width = canvas.rect['width']
+        if reverse != None:
+            height = canvas.rect['width']
+            width = canvas.rect['height']
+        x = canvas.rect['x']
+        y = canvas.rect['y']
+        
+        image = Image.open(file_path)
+        image = image.crop((x, y, x + height, y + width))
+        cropped_screenshot = file_path_folder + str(int(time.time()*100.00)) + ".png"
+        image.save(cropped_screenshot)
+
+        h1 = Image.open(file_expected).histogram()
+        h2 = Image.open(cropped_screenshot).histogram()
+        print ("Comparing images, expected: " + file_expected + " and actual: " + cropped_screenshot + " are not equal.")
+        assert(h1 == h2)    
+        

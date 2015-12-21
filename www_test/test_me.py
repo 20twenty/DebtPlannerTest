@@ -7,12 +7,12 @@ from locators import LoginPageLocators
 from locators import CreateAccountPageLocators
 from locators import ValidatePageLocators
 from locators import ForgotPasswordPageLocators
+from functools import total_ordering
 import page
 import mail
 import math
 import common
 import debt
-from functools import total_ordering
 
 # ---------------------------
 # ---- Tests start here -----
@@ -116,6 +116,11 @@ def test_delete_debt(dpp):
     assert(base_page.is_displayed(MainPageLocators.debt_name))
     main_page.delete_debt()
     assert(base_page.is_displayed(MainPageLocators.debt_name, False) != True)
+    
+    main_page.add_debt()
+    main_page.click(MainPageLocators.remove_button)
+    main_page.click(MainPageLocators.delete_confirm)
+    assert(base_page.is_displayed(MainPageLocators.debt_name, False) != True)
 
 def test_title(dpp):
     assert 'Debt Payoff Planner' == dpp.title
@@ -211,7 +216,7 @@ def test_validation_principal_payment(dpp):
     main_page.add_payment_ammount(-0.01)
     main_page.add_payment_ammount(0)
     main_page.add_payment_ammount(0.01)
-    main_page.click(MainPageLocators.edit_debt)
+    main_page.click(MainPageLocators.edit_button)
     main_page.validation_check(MainPageLocators.debt_payment_amount, MainPageLocators.save_button, -10000001, error_message)
     main_page.validation_check(MainPageLocators.debt_payment_amount, MainPageLocators.save_button, 1000000001, error_message)
 
@@ -227,7 +232,7 @@ def test_validation_principal_calculator_total_payment(dpp):
     base_page = page.BasePage(dpp)
     main_page = base_page.open_main_page_as_guest()
     main_page.add_debt_parametrized("name", randint(1, 10000000), randint(1, 10000000), randint(1, 99))
-    main_page.click(MainPageLocators.edit_debt)
+    main_page.click(MainPageLocators.edit_button)
     main_page.click(MainPageLocators.principal_payment_calculator)
     main_page.click(MainPageLocators.use_plan_estimate)
 
@@ -465,3 +470,54 @@ def test_payoff_plan_two_debts_ending_same_month(dpp):
     main_page.set_payoff_order('As listed')    
     main_page.check_step_debt_paid(0, debt_1)
     main_page.check_step_debt_paid(1, debt_2)
+
+def test_canvas(dpp):
+    debt_1 = debt.Debt("test canvas debt 1", 100, 10, 10, None, 'Auto Loan', '1st')
+    debt_2 = debt.Debt("test canvas debt 2", 200, 20, 20, None, 'Student Loan', '28th')
+    debt_3 = debt.Debt("test canvas debt 3", 300, 30, 30, None, 'Auto Loan', '3rd')
+
+    base_page = page.BasePage(dpp)
+    main_page = base_page.open_main_page_as_guest()
+    main_page.add_debt_parametrized(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr, debt_1.category, debt_1.payment_due_date)
+    main_page.verify_canvas(MainPageLocators.debt_category_chart, "test_canvas_chart_100.png")
+    main_page.verify_canvas(MainPageLocators.debt_name_chart, "test_canvas_chart_100.png")
+    main_page.verify_object_text(MainPageLocators.category_legend, [debt_1.category])
+    main_page.verify_object_text(MainPageLocators.debts_legend, [debt_1.debt_name])
+    
+    main_page.add_debt_parametrized(debt_2.debt_name, debt_2.starting_balance, debt_2.minimum_payment, debt_2.apr, debt_2.category, debt_2.payment_due_date)    
+    main_page.verify_canvas(MainPageLocators.debt_category_chart, "test_canvas_chart_33_66.png")
+    main_page.verify_canvas(MainPageLocators.debt_name_chart, "test_canvas_chart_33_66.png")
+    main_page.verify_object_text(MainPageLocators.category_legend, [debt_2.category, debt_1.category])
+    main_page.verify_object_text(MainPageLocators.debts_legend, [debt_2.debt_name, debt_1.debt_name])
+    
+    main_page.add_debt_parametrized(debt_3.debt_name, debt_3.starting_balance, debt_3.minimum_payment, debt_3.apr, debt_3.category, debt_3.payment_due_date)
+    main_page.verify_canvas(MainPageLocators.debt_category_chart, "test_canvas_chart_33_66.png")
+    main_page.verify_canvas(MainPageLocators.debt_name_chart, "test_canvas_chart_17_33_50.png")
+    main_page.verify_object_text(MainPageLocators.category_legend, [debt_1.category, debt_2.category])
+    main_page.verify_object_text(MainPageLocators.debts_legend, [debt_3.debt_name, debt_2.debt_name, debt_1.debt_name])
+
+def test_debt_chart(dpp):
+    debt_1 = debt.Debt("test debt chart", 100, 10, 10)
+
+    base_page = page.BasePage(dpp)
+    main_page = base_page.open_main_page_as_guest()
+    main_page.add_debt_parametrized(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr, debt_1.category, debt_1.payment_due_date)
+    
+    main_page.click(MainPageLocators.chart_button)
+    main_page.verify_canvas(MainPageLocators.payoff_chart, "payoff_chart_100.png", True)
+    chart_title = main_page.get_text(MainPageLocators.debt_name_chart_title)
+    assert(chart_title == debt_1.debt_name)
+    main_page.click(MainPageLocators.add_back_button)
+    
+    main_page.add_payment(20)
+    main_page.click(MainPageLocators.chart_button)
+    main_page.verify_canvas(MainPageLocators.payoff_chart, "payoff_chart_100-20.png", True)
+    main_page.click(MainPageLocators.add_back_button)
+    
+    debt_2 = debt.Debt("test debt chart", 10000, 1)
+    main_page.edit_debt(debt_1.debt_name, debt_2.debt_name, debt_2.starting_balance, debt_2.minimum_payment, debt_2.apr)
+    main_page.add_payment(0)
+    main_page.click(MainPageLocators.chart_button)
+    chart_displayed = main_page.is_displayed(MainPageLocators.payoff_chart, False)
+    assert(chart_displayed == False)
+    

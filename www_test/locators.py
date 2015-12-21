@@ -65,7 +65,6 @@ class MainPageLocators(object):
     new_expenses_input = (By.CSS_SELECTOR, "#new_expenses_input")
     calculate_principal = (By.CSS_SELECTOR, "#calculate_principal")
     use_plan_estimate = (By.CSS_SELECTOR, "#use_plan_estimate")
-    delete = (By.CSS_SELECTOR, '#delete')
     other_options = (By.CSS_SELECTOR, '#other_options')
 
     remove_made_payment_button = (By.CSS_SELECTOR, "#individual_made_payment_display #remove_made_payment_button_img")
@@ -80,6 +79,12 @@ class MainPageLocators(object):
     use_plan_estimate = (By.CSS_SELECTOR, "#use_plan_estimate")
     delete = (By.CSS_SELECTOR, '#delete')
     other_options = (By.CSS_SELECTOR, '#other_options')
+
+#    Chart page
+    debt_name_chart_title = (By.CSS_SELECTOR, '#debt_name_chart_title')
+    payoff_chart = (By.CSS_SELECTOR, '#payoff_chart')
+    payoff_legend = (By.CSS_SELECTOR, '#payoff_legend')
+    add_back_button = (By.CSS_SELECTOR, '#add_back_button')
 
 #    Strategy
     minimum_payment = (By.CSS_SELECTOR, '#minimum_payment')
@@ -110,12 +115,12 @@ class MainPageLocators(object):
     
 #     Chart Debt Categories
     chart_categories_panel = (By.CSS_SELECTOR, "#chart_categories_panel")
-    categories = (By.CSS_SELECTOR, "#category_legend td:nth-of-type(2)")
+    category_legend = (By.CSS_SELECTOR, "#category_legend td:nth-of-type(2)")
     debt_category_chart = (By.CSS_SELECTOR, "#debt_category_chart")
 
 #     Chart Debts
     chart_debts_panel = (By.CSS_SELECTOR, "#chart_debts_panel")
-    categories = (By.CSS_SELECTOR, "#debts_legend td:nth-of-type(2)")
+    debts_legend = (By.CSS_SELECTOR, "#debts_legend td:nth-of-type(2)")
     debt_name_chart = (By.CSS_SELECTOR, "#debt_name_chart")
     
 #    Account manage

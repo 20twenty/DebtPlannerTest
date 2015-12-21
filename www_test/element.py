@@ -104,3 +104,24 @@ class BasePageElement(object):
             except:
                 return False
         return result
+
+    def select_option(self, obj, text):
+        el = self.get_element(obj)
+        for option in el.find_elements_by_tag_name('option'):
+            if option.text == text:
+                option.click()
+                break
+
+    def get_selected_option(self, obj):
+        select_box = self.get_element(obj)
+        return select_box.first_selected_option.text
+        
+    def verify_object_text(self, obj, legend):
+        elements = self.get_elements(obj)
+        i = 0
+        for element in elements:
+            legend_actual = self.get_text(element)
+            print "Compare legend text expected: '%s' and actual: '%s'." % (legend_actual, legend[i])
+            assert(legend_actual == legend[i])
+            i = i + 1
+            

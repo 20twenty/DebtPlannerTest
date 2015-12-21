@@ -3,12 +3,14 @@ import common
 
 class Debt:
     
-    def __init__(self, debt_name, starting_balance, minimum_payment = None, apr = None, number_of_payments = None, payoff_progress = None):
+    def __init__(self, debt_name, starting_balance, minimum_payment = None, apr = None, number_of_payments = None, category = None, payment_due_date = None, payoff_progress = None):
         self.debt_name = debt_name
         self.starting_balance = starting_balance
         self.minimum_payment = minimum_payment
         self.number_of_payments = number_of_payments
         self.apr = apr
+        self.category = category
+        self.payment_due_date = payment_due_date
         self.payoff_progress = apr
         self.remainder = False
 

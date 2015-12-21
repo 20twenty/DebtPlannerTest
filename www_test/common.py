@@ -1,4 +1,6 @@
 import datetime
+import filecmp
+import os, shutil
 #from calendar import calendar
 
 def get_number(s):
@@ -51,3 +53,17 @@ def get_total_interest(starting_balance, minimum_payment, number_of_payments, ap
         total_interest = total_interest + (starting_balance - minimum_payment * count + total_interest) * apr * 0.01 / 12
         count = count + 1
     return round(total_interest, 2)
+
+def compare_files(f1, f2):
+    return filecmp.cmp(f1, f2)
+    
+def remove_files_from_folder(folder):
+    for the_file in os.listdir(folder):
+        file_path = os.path.join(folder, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+            #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+        except Exception, e:
+            print e    
+    
