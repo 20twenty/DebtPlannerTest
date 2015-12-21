@@ -1,7 +1,5 @@
 import datetime
-import filecmp
-import os, shutil
-#from calendar import calendar
+import os
 
 def get_number(s):
     l = []
@@ -53,9 +51,6 @@ def get_total_interest(starting_balance, minimum_payment, number_of_payments, ap
         total_interest = total_interest + (starting_balance - minimum_payment * count + total_interest) * apr * 0.01 / 12
         count = count + 1
     return round(total_interest, 2)
-
-def compare_files(f1, f2):
-    return filecmp.cmp(f1, f2)
     
 def remove_files_from_folder(folder):
     for the_file in os.listdir(folder):
