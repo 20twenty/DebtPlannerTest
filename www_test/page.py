@@ -351,8 +351,5 @@ class MainPage(BasePage):
         cropped_screenshot = file_path_folder + str(int(time.time()*100.00)) + ".png"
         image.save(cropped_screenshot)
 
-        h1 = Image.open(file_expected).histogram()
-        h2 = Image.open(cropped_screenshot).histogram()
-        print ("Comparing images, expected: " + file_expected + " and actual: " + cropped_screenshot + " are not equal.")
-        assert(h1 == h2)    
+        common.compare_images(file_expected, cropped_screenshot)
         
