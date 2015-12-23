@@ -7,13 +7,11 @@ from locators import LoginPageLocators
 from locators import CreateAccountPageLocators
 from locators import ValidatePageLocators
 from locators import ForgotPasswordPageLocators
-from functools import total_ordering
 import page
 import mail
 import math
 import common
 import debt
-import os
 
 # ---------------------------
 # ---- Tests start here -----

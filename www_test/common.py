@@ -67,7 +67,7 @@ def remove_files_from_folder(folder):
 def compare_images(img1, img2):
     h1 = Image.open(img1).histogram()
     h2 = Image.open(img2).histogram()
-    print ("Comparing images, expected: " + img1 + " and actual: " + img2 + " are not equal.")
+    print ("Comparing images, expected: " + img1 + " and actual: " + img2 + ".")
     rms = math.sqrt(sum((a-b)**2 for a,b in zip(h1, h2))/len(h1))
     assert(rms < 10)
     
