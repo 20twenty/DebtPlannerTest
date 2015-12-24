@@ -24,13 +24,15 @@ def pytest_configure(config):
     base_url = config.getoption("--url")
     WEB_APP = base_url + "planner.html"
     urllib2.urlopen(base_url + "forTestingOnly/deletedb.php").read()
-    common.remove_files_from_folder(os.path.dirname(os.path.realpath(__file__)) + os.sep + "temp")
+    #common.remove_files_from_folder(os.path.dirname(os.path.realpath(__file__)) + os.sep + "temp")
+    common.make_temp(os.path.dirname(os.path.realpath(__file__)) + os.sep + "temp")
 
 @pytest.fixture(scope='session', params=browsers.keys())
 def browser(request):
     driver = browsers[request.param]()
     driver.get(WEB_APP)
-    driver.maximize_window()
+    #driver.maximize_window()
+    driver.set_window_size(1024, 768)
     driver.delete_all_cookies()
     request.addfinalizer(lambda *args: driver.quit())
     return driver

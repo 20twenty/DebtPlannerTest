@@ -470,16 +470,13 @@ def test_payoff_plan_two_debts_ending_same_month(dpp):
     main_page.check_step_debt_paid(0, debt_1)
     main_page.check_step_debt_paid(1, debt_2)
 
-def test_canvas(dpp):
+def test_image_pie_charts(dpp):
     debt_1 = debt.Debt("test canvas debt 1", 100, 10, 10, None, 'Auto Loan', '1st')
     debt_2 = debt.Debt("test canvas debt 2", 200, 20, 20, None, 'Student Loan', '28th')
     debt_3 = debt.Debt("test canvas debt 3", 300, 30, 30, None, 'Auto Loan', '3rd')
 
     base_page = page.BasePage(dpp)
     main_page = base_page.open_main_page_as_guest()
-    
-#     Set windw size to before comparing images
-    main_page.dpp.set_window_size(1024, 768)
     
     main_page.add_debt_parametrized(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr, debt_1.category, debt_1.payment_due_date)
     main_page.check_debt_details(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr, debt_1.payoff_progress)
@@ -502,14 +499,11 @@ def test_canvas(dpp):
     main_page.verify_object_text(MainPageLocators.category_legend, [debt_1.category, debt_2.category])
     main_page.verify_object_text(MainPageLocators.debts_legend, [debt_3.debt_name, debt_2.debt_name, debt_1.debt_name])
 
-def test_debt_chart(dpp):
+def test_image_debt_chart(dpp):
     debt_1 = debt.Debt("test debt chart", 100, 10, 10)
 
     base_page = page.BasePage(dpp)
     main_page = base_page.open_main_page_as_guest()
-    
-#     Set windw size to before comparing images
-    main_page.dpp.set_window_size(1024, 768)
     
     main_page.add_debt_parametrized(debt_1.debt_name, debt_1.starting_balance, debt_1.minimum_payment, debt_1.apr, debt_1.category, debt_1.payment_due_date)
     

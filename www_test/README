@@ -1,9 +1,9 @@
 tests require the following to be installed:
 
-firefox
+firefox (version 42.0 works with selenium 2.47.0)
 python
 sudo apt-get install python-pip
-sudo pip install selenium
+sudo pip install selenium==2.47.0 (2.48.0 does not work)
 sudo pip install pytest
 sudo pip install pytest-xdist
 sudo pip install pytest-html
@@ -21,6 +21,7 @@ To test a local install of the webapp, use the --url option:
 
    where the url specified should be the url where planner.html can be found
 
+   Can be run with any url remotely or locally since it just launches firefox and controls it
 
 To run parallel tests, use the -n option
 
@@ -38,4 +39,13 @@ To run only tests failed from previous run
 	
    py.test --lf
 	  
-Can be run any url remotely or locally since it just launches firefox and controls it
+To see debug output (suppress stdout capture)
+
+   py.test -s
+
+To run headless and capture screenshot 
+
+   xvfb-run -s "-screen 0 1024x768x24+32" py.test
+   import -display :99 -window root image.png; display image.png
+
+

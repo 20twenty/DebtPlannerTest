@@ -333,7 +333,7 @@ class MainPage(BasePage):
         self.click(MainPageLocators.debt_details)
 
     def verify_canvas(self, obj, file_expected, reverse = None):
-        file_expected = os.path.dirname(os.path.realpath(__file__)) + os.sep + "files" + os.sep + file_expected
+        file_expected_path = os.path.dirname(os.path.realpath(__file__)) + os.sep + "files" + os.sep + file_expected
         file_path_folder = os.path.dirname(os.path.realpath(__file__)) + os.sep + "temp" + os.sep
         file_path = file_path_folder + str(int(time.time()*100.00)) + ".png"
         self.dpp.save_screenshot(file_path)
@@ -348,8 +348,9 @@ class MainPage(BasePage):
         
         image = Image.open(file_path)
         image = image.crop((x, y, x + height, y + width))
-        cropped_screenshot = file_path_folder + str(int(time.time()*100.00)) + ".png"
+        #cropped_screenshot = file_path_folder + str(int(time.time()*100.00)) + ".png"
+        cropped_screenshot = file_path_folder + file_expected 
         image.save(cropped_screenshot)
 
-        common.compare_images(file_expected, cropped_screenshot)
+        common.compare_images(file_expected_path, cropped_screenshot)
         
